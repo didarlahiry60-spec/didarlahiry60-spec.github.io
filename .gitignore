@@ -1,0 +1,26 @@
+# Scratch & Temporary Scripts
+apply_*.py
+capture_*.js
+test_*.js
+verify_*.js
+debug_*.js
+patch_*.py
+split_*.py
+update_site.py
+implement_five_tabs.py
+
+# Temporary Screenshots & Frames
+screen-*.png
+frame-*.png
+crop-*.png
+cv_updated.html
+didar-wall-canvas.jpg
+
+# Python & OS
+__pycache__/
+*.pyc
+node_modules/
+.DS_Store
+
+# Local inquiry backup (contains private client messages)
+messages.json

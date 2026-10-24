@@ -1,0 +1,11 @@
+{
+  "name": "didar-lahiry-3d-portfolio",
+  "version": "1.0.0",
+  "description": "Interactive 3D Developer Room & AI Automation Portfolio for Didar Lahiry",
+  "scripts": {
+    "start": "python3 -m http.server 3000",
+    "serve": "npx serve -l 3000"
+  },
+  "keywords": ["threejs", "webgl", "portfolio", "3d-room", "ai-automation"],
+  "author": "Didar Lahiry"
+}

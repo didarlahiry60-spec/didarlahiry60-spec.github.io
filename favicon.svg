@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!--
+    His face, as the loading screen shows it: a pink screen in a dark frame,
+    two dark eyes. The loader's TV is 132 by 96 with a 6px frame and 14px
+    corners; this is that at 64, every edge on a multiple of 4 so that at a
+    16px favicon, a quarter of this, the edges land on whole pixels and stay
+    hard. It carries its own frame, so it reads on light and dark tabs alike.
+  -->
+  <rect x="2" y="10" width="60" height="44" rx="10" fill="#2a2f45" />
+  <rect x="6" y="14" width="52" height="36" rx="6" fill="#ff9ebb" />
+  <rect x="16" y="24" width="8" height="16" fill="#1b1f33" />
+  <rect x="40" y="24" width="8" height="16" fill="#1b1f33" />
+</svg>
