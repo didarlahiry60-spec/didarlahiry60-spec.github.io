@@ -65,7 +65,8 @@ class PortfolioHandler(http.server.SimpleHTTPRequestHandler):
             answer = "I'm Didar's AI assistant! Didar is an AI Automation Specialist, Web Developer, App Developer, and Reverse Engineer based in Dhaka, Bangladesh. He specializes in AI workflows, LLM integrations, and modern full-stack web and mobile applications. Feel free to connect via the phone on the desk or email him directly at itsdidar60@gmail.com!"
 
             if any(w in q for w in ["project", "build", "portfolio", "work"]):
-                answer = "Didar is currently updating his projects portfolio with cutting-edge autonomous AI workflows and full-stack builds. Stay tuned for new releases!"
+                answer = "Didar's featured projects include Kishan (AI Agro-Intelligence Platform & DAM Market Tracker), Letter Portfolio (Interactive Next.js Web Experience), E-Commerce AI Sales Agent (Autonomous 24/7 Telegram Representative), and Facebook 24/7 AI Automation System. Explore them on the ultrawide monitor!"
+            er = "Didar is currently updating his projects portfolio with cutting-edge autonomous AI workflows and full-stack builds. Stay tuned for new releases!"
             elif any(w in q for w in ["contact", "email", "phone", "hire", "whatsapp"]):
                 answer = "You can contact Didar at itsdidar60@gmail.com or via WhatsApp at +880 1631-188500. His full CV is also ready to download on his desk phone!"
             elif any(w in q for w in ["skill", "stack", "tech", "python", "react"]):
