@@ -344,6 +344,48 @@
 }
 
 
+
+/* Pinkish Cursor Click Hint */
+.cursor-click-hint {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  background: rgba(24, 27, 42, 0.94);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #ffb8cb;
+  border: 1px solid rgba(255, 158, 187, 0.55);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 16px rgba(255, 158, 187, 0.35);
+  font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  padding: 5px 13px;
+  border-radius: 99px;
+  animation: pinkishFloatUp 1.6s ease-out forwards;
+  white-space: nowrap;
+}
+
+@keyframes pinkishFloatUp {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0) scale(0.88);
+  }
+  18% {
+    opacity: 1;
+    transform: translate(-50%, -8px) scale(1);
+  }
+  75% {
+    opacity: 1;
+    transform: translate(-50%, -20px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -30px) scale(0.96);
+  }
+}
+
 .sound {
   min-width: 48px !important;
   width: auto !important;
@@ -777,5 +819,76 @@
 </script>
 
 
+
+
+<script>
+  // Mouse Cursor Click Hint (Pinkish Room Theme)
+  (() => {
+    let missedClicks = 0;
+    let lastClickTime = 0;
+    let startX = 0, startY = 0;
+    const undockBtn = document.getElementById('undock');
+
+    function isRoomActive() {
+      if (!undockBtn) return true;
+      return undockBtn.hidden || undockBtn.hasAttribute('hidden');
+    }
+
+    function showCursorHint(x, y) {
+      if (typeof x !== 'number' || typeof y !== 'number') return;
+      const hint = document.createElement('div');
+      hint.className = 'cursor-click-hint';
+      hint.innerHTML = '<span>Click the diamonds 💎</span>';
+      hint.style.left = x + 'px';
+      hint.style.top = y + 'px';
+      document.body.appendChild(hint);
+      setTimeout(() => hint.remove(), 1600);
+    }
+
+    window.addEventListener('pointerdown', (e) => {
+      startX = e.clientX;
+      startY = e.clientY;
+    }, { passive: true });
+
+    window.addEventListener('pointerup', (e) => {
+      if (!isRoomActive()) {
+        missedClicks = 0;
+        return;
+      }
+
+      if (e.target.closest('button, nav, a, input, select, textarea, .top-nav-clock, .badge-nav')) {
+        missedClicks = 0;
+        return;
+      }
+
+      const dist = Math.hypot(e.clientX - startX, e.clientY - startY);
+      if (dist > 12) return;
+
+      const now = Date.now();
+      if (now - lastClickTime > 7000) {
+        missedClicks = 0;
+      }
+      lastClickTime = now;
+
+      const clickX = e.clientX;
+      const clickY = e.clientY;
+
+      setTimeout(() => {
+        if (!isRoomActive()) {
+          missedClicks = 0;
+          return;
+        }
+        missedClicks++;
+        if (missedClicks >= 2) {
+          showCursorHint(clickX, clickY);
+        }
+      }, 250);
+    });
+
+    window.addEventListener('hashchange', () => {
+      missedClicks = 0;
+    });
+  })();
+</script>
 
 </body></html>
