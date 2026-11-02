@@ -157,9 +157,13 @@
   background: var(--screen);
   box-shadow: 0 0 10px var(--screen);
   border-radius: 99px;
-  transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.15s ease-out;
+  animation: lineFillRun 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+@keyframes lineFillRun {
+  0% { transform: scaleX(0); }
+  60% { transform: scaleX(0.75); }
+  100% { transform: scaleX(1); }
 }
 </style>
 </head><body><!-- The loader: a model training, as the room loads. Its loss falling on a
