@@ -487,27 +487,7 @@
   }
 }
 
-@keyframes dockGuidePulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(0, 240, 255, 0), 0 0 18px #ff9ebb73;
-    border-color: rgba(0, 240, 255, 0.4);
-    transform: translate(-50%, 0) scale(1);
-  }
-  50% {
-    box-shadow: 0 0 25px 6px rgba(0, 240, 255, 0.65), 0 0 35px #ff9ebb;
-    border-color: rgba(0, 240, 255, 0.95);
-    transform: translate(-50%, -4px) scale(1.04);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(0, 240, 255, 0), 0 0 18px #ff9ebb73;
-    border-color: rgba(255, 255, 255, 0.12);
-    transform: translate(-50%, 0) scale(1);
-  }
-}
 
-.index.guide-highlight {
-  animation: dockGuidePulse 1.2s ease-in-out 2 !important;
-}
 
 .sound {
   min-width: 48px !important;
@@ -964,7 +944,7 @@
     const toast = document.getElementById('room-guide-toast');
     const closeBtn = document.getElementById('guide-toast-close');
     const undockBtn = document.getElementById('undock');
-    const navDock = document.querySelector('.index');
+    
 
     function isRoomActive() {
       if (!undockBtn) return true;
@@ -991,13 +971,7 @@
       clearTimeout(toastTimer);
       toastTimer = setTimeout(hideGuidance, 4500);
 
-      // 3. Highlight bottom navigation dock
-      if (navDock) {
-        navDock.classList.remove('guide-highlight');
-        void navDock.offsetWidth;
-        navDock.classList.add('guide-highlight');
-        setTimeout(() => navDock.classList.remove('guide-highlight'), 2600);
-      }
+
     }
 
     function hideGuidance() {
