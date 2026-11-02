@@ -1,35 +1,231 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Didar Lahiry — AI Automation Specialist & Web Developer</title><meta name="description" content="Didar Lahiry, AI Automation Specialist & Web Developer from Dhaka, Bangladesh. AI workflows, LLM integration, chatbots, and modern responsive web applications."><link rel="canonical" href="./"><!-- How a shared link shows: the room, as it first opens (public/og.jpg, 1200 by 630) --><meta property="og:type" content="website"><meta property="og:url" content="./"><meta property="og:title" content="Didar Lahiry — AI Automation Specialist & Web Developer"><meta property="og:description" content="Didar Lahiry, AI Automation Specialist & Web Developer from Dhaka, Bangladesh. AI workflows, LLM integration, chatbots, and modern responsive web applications."><meta property="og:image" content="/og.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="A robot with a TV for a head at a desk in a dark room, with a city at dusk through the window"><meta name="twitter:card" content="summary_large_image"><meta name="theme-color" content="#0f1220"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="preload" href="/fonts/SpaceGrotesk-Variable.woff2" as="font" type="font/woff2" crossorigin><script>
-  // Serverless mock handlers for /api/now-playing and /api/ask (GitHub Pages / Vercel ready)
+  // Serverless AI Chatbot engine for /api/ask and /api/now-playing (GitHub Pages / Vercel ready)
   (() => {
     const origFetch = window.fetch;
-    window.fetch = function(url, options) {
+
+    // Gemini API caller with timeout
+    async function fetchGeminiAI(q, history, apiKey) {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 6000);
+      try {
+        const sysPrompt = "You are the personal AI avatar of Didar Lahiry (দিদার লাহিড়ী), residing in his 3D desk robot TV head. Didar is an AI Automation Specialist, Full-Stack Web & App Developer, and Reverse Engineer (REA) in Dhaka, Bangladesh. Didar's 4 featured projects: 1. Kishan (AI Agro-Intelligence, live DAM market prices, weather advisory, Bengali TTS, Flutter + FastAPI), 2. Letter Portfolio (Tactile physical envelope 3D web experience in Next.js + Framer Motion), 3. E-Commerce AI Sales Agent (24/7 autonomous Telegram representative with Gemini AI + SQLite), 4. Facebook 24/7 AI Automation (AI tech post curation, Pillow graphic banners, real-time Bengali comments & Messenger AI). Contact: itsdidar60@gmail.com, WhatsApp +880 1631-188500. Education: HSC from Govt. Sreenagar College (Batch 2024, GPA 4.58), SSC from Kazir Pagla A.T. Inst. (Batch 2022, GPA 4.89). Reply in the exact same language the user asks (Bengali or English). Keep responses friendly, charming, concise (under 80 words) and nicely formatted with emojis so they fit well on the small TV screen.";
+
+        const contents = [];
+        if (Array.isArray(history)) {
+          const recent = history.slice(-4);
+          for (const item of recent) {
+            if (item.role && item.content) {
+              contents.push({
+                role: item.role === 'assistant' ? 'model' : 'user',
+                parts: [{ text: item.content }]
+              });
+            }
+          }
+        }
+        contents.push({ role: 'user', parts: [{ text: q }] });
+
+        const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey;
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            system_instruction: { parts: [{ text: sysPrompt }] },
+            contents: contents,
+            generationConfig: { temperature: 0.7, maxOutputTokens: 250 }
+          }),
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        if (!res.ok) return null;
+        const data = await res.json();
+        return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || null;
+      } catch (e) {
+        clearTimeout(timeoutId);
+        return null;
+      }
+    }
+
+    // Local Conversational AI Engine
+    function generateLocalAIResponse(q, history) {
+      const isBn = /[\u0980-\u09FF]/.test(q);
+      const ql = q.toLowerCase().trim();
+
+      // Project 1: Kishan
+      if (/kishan|কৃষাণ|কৃষান|chash|krishi|কৃষি|dam\s*market|weather|আবহাওয়া|কৃষক/i.test(ql)) {
+        return isBn
+          ? "🌾 কৃষাণ (Kishan AI Platform):\nবাংলাদেশের কৃষকদের জন্য জাতীয় এগ্রো-ইন্টেলিজেন্স সিস্টেম।\n• DAM (কৃষি বিপণন অধিদপ্তর) থেকে প্রতিদিনের পাইকারি ও খুচরা বাজারদর ট্র্যাক করে।\n• Open-Meteo দিয়ে ৭ দিনের হাইপার-লোকাল আবহাওয়ার পূর্বাভাস ও পরামর্শ দেয়।\n• সম্পূর্ণ বাংলায় টেক্সট-টু-স্পিচ (TTS) ভয়েস ফিচার ও অফলাইন ক্যাশিং।\n• স্ট্যাক: Flutter, Dart, Python FastAPI, Gemini API, SQLite।\n\nমনিটরের Kishan ট্যাবে ক্লিক করে লাইভ ডিটেইলস দেখুন!"
+          : "🌾 Kishan (কৃষাণ) AI Platform:\nNational agricultural intelligence for farmers across Bangladesh.\n• Tracks live DAM wholesale vs retail produce market rates with trend indicators.\n• Hyper-local 7-day crop advisory and weather forecasts via Open-Meteo.\n• Bengali Text-to-Speech (TTS) voice accessibility and offline SQLite cache.\n• Stack: Flutter, Dart, Python FastAPI, Gemini API, SQLite.\n\nCheck the monitor's Kishan tab to explore!";
+      }
+
+      // Project 2: Letter Portfolio
+      if (/letter|লেটার|envelope|খাম|stationery|চিঠি/i.test(ql)) {
+        return isBn
+          ? "✉️ Letter Portfolio Experience:\nএকটি ফিজিক্যাল এনভেলপ ও লেটার ডেস্ক মেটাফোর ওয়েব অ্যাপ্লিকেশন।\n• বাস্তব চিঠির খাম খোলার অভিজ্ঞতা এবং ইন্টারেক্টিভ প্রজেক্ট ফোল্ডার।\n• মাউসের নড়াচড়া অনুযায়ী 3D টিল্ট পারসপেক্টিভ ও Framer Motion স্প্রিং ফিজিক্স।\n• স্ট্যাক: Next.js App Router, TypeScript, Tailwind CSS, Framer Motion।\n\nমনিটরে ক্লিক করে অথবা https://didarlahiry60-spec.github.io/letter-portfolio/ লিংকে সরাসরি দেখে আসতে পারেন!"
+          : "✉️ Letter Portfolio Experience:\nA tactile stationary & envelope desk web experience.\n• Physical envelopes that unfold smoothly with interactive project letters.\n• Dynamic 3D tilt perspective and Framer Motion spring physics.\n• Stack: Next.js App Router, TypeScript, Tailwind CSS, Framer Motion.\n\nClick the Letter Portfolio tab on the monitor or visit https://didarlahiry60-spec.github.io/letter-portfolio/!";
+      }
+
+      // Project 3: AI Sales Agent
+      if (/(sales|টেলিগ্রাম|সেলস|telegram|ads\s*fashion|bot|বট|দোকান|বিক্রি|কাস্টমার)/i.test(ql) && !/fb|facebook|ফেসবুক/.test(ql)) {
+        return isBn
+          ? "🛍️ E-Commerce AI Sales Agent (ADS Fashion Bot):\n২৪/৭ সক্রিয় টেলিগ্রাম সেলস রিপ্রেজেন্টেটিভ ও কাস্টমার সাপোর্ট বট।\n• ক্রেতাদের সাথে স্বাভাবিক বাংলায় কথা বলে ফ্যাশন সাইজ, ফেব্রিক ও স্টক পরামর্শ দেয়।\n• Google Gemini AI দ্বারা প্রাসঙ্গিক প্রোডাক্ট রেকমেন্ড করে ও স্বয়ংক্রিয়ভাবে অর্ডার কনফার্ম করে।\n• স্ট্যাক: Python, Google Gemini API, python-telegram-bot, SQLite, AsyncIO।\n\nমনিটরে AI Sales Agent ট্যাবে এর বিস্তারিত ডেমো আছে!"
+          : "🛍️ E-Commerce AI Sales Agent:\n24/7 intelligent Telegram sales representative and customer support agent.\n• Natural conversational sales negotiations in Bengali and English.\n• Multi-turn context-aware recommendations via Gemini AI and automated SQLite checkout.\n• Stack: Python, Google Gemini API, python-telegram-bot, SQLite, AsyncIO.";
+      }
+
+      // Project 4: Facebook Automation
+      if (/facebook|ফেসবুক|fb\s*auto|fb\s*automation|সোশ্যাল\s*মিডিয়া|social\s*media|অটোমেশন/i.test(ql) && !/kishan|letter|sales/.test(ql)) {
+        return isBn
+          ? "📱 Facebook 24/7 AI Automation System:\nক্লাউড-রেডি সোশ্যাল মিডিয়া অটোমেশন অটোপাইলট।\n• দিনে ৩ বার (সকাল ১০:০০, দুপুর ২:৩০, রাত ৮:৩০) প্রযুক্তি বিষয়ক AI পোস্ট পাবলিশ করে।\n• Python Pillow দিয়ে ব্র্যান্ডেড গ্রাফিক ব্যানার ইমেজ স্বয়ংক্রিয়ভাবে জেনারেট করে।\n• কমেন্টের তাৎক্ষণিক বাংলা রিপ্লাই এবং মেসেঞ্জারে ২৪/৭ কাস্টমার সাপোর্ট দেয়।\n• স্ট্যাক: Python, Facebook Graph API, Gemini API, Pillow, Flask, APScheduler।"
+          : "📱 Facebook 24/7 AI Automation System:\nCloud-ready social media autopilot system.\n• Curates and publishes tech posts 3x daily (10:00 AM, 2:30 PM, 8:30 PM BST).\n• Generates branded graphic banners automatically using Python Pillow.\n• Instant real-time Bengali comment replies and 24/7 Messenger chatbot.\n• Stack: Python, Facebook Graph API, Gemini API, Pillow, APScheduler, Flask.";
+      }
+
+      // All Projects Overview
+      if (/project|প্রজেক্ট|portfolio|পোর্টফোলিও|কাজ|বিল্ড|build/i.test(ql)) {
+        return isBn
+          ? "দিদারের ৪টি প্রধান ফিচার্ড প্রজেক্ট মনিটরে সাজানো আছে:\n1. 🌾 কৃষাণ (Kishan AI) — জাতীয় কৃষি আবহাওয়া ও বাজারদর প্ল্যাটফর্ম\n2. ✉️ Letter Portfolio — 3D ইন্টারেক্টিভ এনভেলপ ওয়েব এক্সপেরিয়েন্স\n3. 🛍️ AI Sales Agent — 24/7 টেলিগ্রাম কাস্টমার সাপোর্ট ও সেলস বট\n4. 📱 FB Automation — ফেসবুক AI কন্টেন্ট ও মেসেঞ্জার অটোপাইলট\n\nমনিটরের যেকোনো প্রজেক্ট বাটনে ক্লিক করে কোড ও ডেমো দেখতে পারেন!"
+          : "Didar has 4 featured production-grade projects on the monitor:\n1. 🌾 Kishan AI Platform — National agricultural telemetry & Bengali voice assistant\n2. ✉️ Letter Portfolio — Interactive envelope & stationery 3D web experience\n3. 🛍️ AI Sales Agent — 24/7 autonomous Telegram sales representative with Gemini AI\n4. 📱 FB Automation — Facebook 24/7 dynamic banner & AI auto-reply system\n\nClick any project tab on the monitor to see the full showcase!";
+      }
+
+      // Skills & Technologies
+      if (/skill|স্কিল|দক্ষতা|স্ট্যাক|stack|tech|টেক|কী\s*কী\s*পারো|কী\s*পারো|পারো|python|flutter|react|three\.?js|ai\s*agent|fastapi|node|javascript|typescript/i.test(ql)) {
+        return isBn
+          ? "দিদারের প্রধান টেকনিক্যাল দক্ষতাসমূহ:\n• AI & Agents: Autonomous AI Agents, Google Gemini API, LangChain, Multi-Agent Orchestration, Phoenix 3.0।\n• Web Development: JavaScript/TypeScript, React, Next.js, Astro, Three.js (3D WebGL), Node.js, Tailwind CSS।\n• App Development: Flutter, Dart, Python (FastAPI/Flask), SQLite, Offline-first sync।\n• Reverse Engineering (REA): Frida, GDB, Rizin/Cutter, Ghidra, Android APK/DEX অ্যানালাইসিস।"
+          : "Didar's core technical expertise spans:\n• AI & Automation: Autonomous AI Agents, Google Gemini API, Multi-Agent Orchestration, LangChain, Voice Orchestrator.\n• Full-Stack & 3D Web: JavaScript/TypeScript, React, Next.js, Astro, Three.js/WebGL, Node.js, Tailwind CSS.\n• Mobile & App Dev: Flutter, Dart, Python (FastAPI/Flask), SQLite, REST/GraphQL.\n• Reverse Engineering (REA): Binary analysis, Frida, GDB, Rizin/Cutter, Ghidra, Android APK reverse engineering.";
+      }
+
+      // Contact & Hire & WhatsApp / Phone / Email
+      if (/contact|যোগাযোগ|email|ইমেইল|phone|ফোন|whatsapp|হোয়াটসঅ্যাপ|হোয়াটসঅ্যাপ|নাম্বার|নম্বর|কথা\s*বলব|হায়ার|হায়ার|hire|মেইল/i.test(ql)) {
+        return isBn
+          ? "দিদারের সাথে সরাসরি যোগাযোগের লিঙ্ক:\n📧 ইমেইল: itsdidar60@gmail.com\n💬 হোয়াটসঅ্যাপ: +880 1631-188500 (https://wa.me/8801631188500)\n📱 ডেস্কে রাখা ফোনে ক্লিক করে সরাসরি মেসেজ বা প্রজেক্ট ইনকোয়ারি পাঠাতে পারেন!"
+          : "You can connect with Didar directly via:\n📧 Email: itsdidar60@gmail.com\n💬 WhatsApp: +880 1631-188500 (https://wa.me/8801631188500)\n📱 Or tap the phone on the desk to send a direct message!";
+      }
+
+      // Education
+      if (/education|পড়াশোনা|পড়াশুনা|লেখাপড়া|college|কলেজ|school|স্কুল|hsc|ssc|এইচএসসি|এসএসসি|ভার্সিটি|university|রেজাল্ট|gpa/i.test(ql)) {
+        return isBn
+          ? "দিদারের শিক্ষাগত যোগ্যতা:\n🎓 HSC: সরকারি শ্রীনগর কলেজ (Govt. Sreenagar College) · ব্যাচ ২০২৪ · GPA 4.58 (বিজ্ঞান বিভাগ - ম্যাথ, ফিজিক্স ও আইসিটি)\n🎓 SSC: কাজী পাগলা এ.টি. ইনস্টিটিউশন · ব্যাচ ২০২২ · GPA 4.89 (বিজ্ঞান বিভাগ)\n\nবোর্ডের পিনবোর্ডে এডুকেশন সেকশনে এর পূর্ণ বিবরণ রয়েছে!"
+          : "Didar's educational credentials:\n🎓 Higher Secondary (HSC): Govt. Sreenagar College · Batch 2024 · GPA 4.58 (Science: Math, Physics & ICT)\n🎓 Secondary (SSC): Kazir Pagla A.T. Institution · Batch 2022 · GPA 4.89 (Science)\n\nCheck the Education tab on the pinboard for more details!";
+      }
+
+      // Experience
+      if (/experience|অভিজ্ঞতা|কোথায়\s*কাজ|কাজ\s*করেছো|চাকরি|job|career/i.test(ql)) {
+        return isBn
+          ? "দিদার ২০২৬ থেকে প্রফেশনাল হিসেবে কাজ করছেন:\n• AI Automation Specialist: অটোনোমাস মাল্টি-টার্ন এজেন্ট ও ভয়েস কন্ট্রোলড পাইপলাইন তৈরি।\n• Web & App Developer: হাই-পারফরম্যান্স 3D ওয়েবজিএল এক্সপেরিয়েন্স এবং ক্রস-প্ল্যাটফর্ম মোবাইল অ্যাপস।\n• Reverse Engineer: বাইনারি অ্যানালাইসিস, সিকিউরিটি ফরেনসিক্স ও এপিআই রিভার্স ইঞ্জিনিয়ারিং।\""
+          : "Didar works across 4 professional core specializations:\n• AI Automation Specialist (2026-Present): Multi-agent architectures & autonomous LLM workflows.\n• Web & App Developer (2026-Present): High performance 3D Three.js experiences & cross-platform Flutter apps.\n• Reverse Engineer (2026-Present): Binary analysis, Frida instrumentation, and protocol inspection.";
+      }
+
+      // Identity & Who is Didar
+      if (/who|তুমি\s*কে|কে\s*তুমি|দিদার\s*কে|নাম\s*কি|পরিচয়|didar\s*ke|tumi\s*ke/i.test(ql)) {
+        return isBn
+          ? "আমি দিদার লাহিড়ীর এআই ভার্সন! দিদার হলেন ঢাকা, বাংলাদেশের একজন AI অটোমেশন স্পেশালিস্ট, ওয়েব ও অ্যাপ ডেভেলপার এবং রিভার্স ইঞ্জিনিয়ার।\nতিনি আধুনিক AI প্রযুক্তি, অটোনোমাস এজেন্ট এবং 3D ওয়েব অ্যাপ্লিকেশন তৈরি করেন। ডেস্কে তাকিয়ে তার কাজের পুরো পরিবেশ দেখতে পারেন!"
+          : "I'm Didar's 24/7 AI assistant! Didar Lahiry is an AI Automation Specialist, Web & App Developer, and Reverse Engineer based in Dhaka, Bangladesh. He builds intelligent multi-agent systems, cross-platform apps, and interactive 3D web experiences.";
+      }
+
+      // Greetings
+      if (/kemon|কেমন|hi|hello|হ্যালো|সালাম|salam|hey|halo|হেই/i.test(ql)) {
+        return isBn
+          ? "হ্যালো! আমি দারুণ আছি! আমি দিদার লাহিড়ীর এআই রোবট। দিদারের প্রজেক্ট, স্কিল, পড়াশোনা, অভিজ্ঞতা বা কাজ নিয়ে যেকোনো প্রশ্ন আমাকে করতে পারেন। আপনি কেমন আছেন?"
+          : "Hey there! I'm doing great! I'm Didar's AI assistant. Ask me anything about Didar's projects, tech stack, experience, or how to get in touch. How can I help you today?";
+      }
+
+      // Location
+      if (/location|বাড়ি|কোথায়\s*থাকো|বাসা|দেশ|dhaka|ঢাকা|living/i.test(ql)) {
+        return isBn
+          ? "দিদার ঢাকা, বাংলাদেশে (Dhaka, Bangladesh) থাকেন। তিনি বিশ্বব্যাপী ক্লায়েন্ট এবং টিমদের সাথে রিমোটলি কাজ করেন।"
+          : "Didar lives in Dhaka, Bangladesh. He works remotely with clients and tech teams worldwide.";
+      }
+
+      // CV / Resume
+      if (/cv|resume|রেজুমে|জীবনবৃত্তান্ত/i.test(ql)) {
+        return isBn
+          ? "দিদারের রেজুমে ডাউনলোড করতে ডেস্কে রাখা ফোনে ক্লিক করুন অথবা সরাসরি লিঙ্ক: /DIDAR-LAHIRY%20(Resume).pdf"
+          : "You can download Didar's complete resume from the phone on the desk, or via direct link: /DIDAR-LAHIRY%20(Resume).pdf";
+      }
+
+      // Thanks / Farewell
+      if (/thank|ধন্যবাদ|থ্যাঙ্কস|bye|বিদায়|ভালো/i.test(ql)) {
+        return isBn
+          ? "অনেক ধন্যবাদ! আপনার দিনটি শুভ হোক! আর কোনো কিছু জানতে চাইলে আমাকে যে কোনো সময় জিজ্ঞেস করতে পারেন! 😊"
+          : "You're very welcome! Feel free to ask anytime if you need more information about Didar's work. Have a wonderful day! 😊";
+      }
+
+      // Fallback
+      return isBn
+        ? "আমি দিদার লাহিড়ীর এআই অ্যাসিস্ট্যান্ট! আমি দিদারের ৪টি প্রধান প্রজেক্ট (কৃষাণ, লেটার পোর্টফোলিও, সেলস বট, ফেসবুক অটোমেশন), টেক স্কিল, পড়াশোনা বা যোগাযোগের বিষয়ে বিস্তারিত তথ্য দিতে পারি। আপনার কী জানতে ইচ্ছা করছে বলুন!\n\n(টিপ: সম্পূর্ণ জেনারেটিভ AI অ্যাক্টিভ করতে 'key <আপনার_Gemini_API_Key>' লিখে সেন্ড করুন)"
+        : "I'm Didar's AI assistant! I can provide full details on Didar's 4 featured projects (Kishan, Letter Portfolio, AI Sales Bot, Facebook Automation), technical skills, background, or contact details. What would you like to explore?\n\n(Tip: You can enable full live Gemini AI by typing 'key <your_gemini_api_key>')";
+    }
+
+    // Main fetch interceptor
+    window.fetch = async function(url, options) {
       if (typeof url === 'string') {
         if (url.startsWith('/api/now-playing')) {
-          return Promise.resolve(new Response(JSON.stringify({
+          return new Response(JSON.stringify({
             title: "Creative Coding Ambient",
             artist: "Didar Lahiry Workspace",
             state: "playing",
             url: "https://open.spotify.com"
-          }), { status: 200, headers: { 'Content-Type': 'application/json' } }));
+          }), { status: 200, headers: { 'Content-Type': 'application/json' } });
         }
+
         if (url.startsWith('/api/ask') && options && options.method === 'POST') {
           let q = "";
+          let history = [];
           try {
             const body = JSON.parse(options.body || "{}");
-            q = (body.question || "").toLowerCase();
+            q = (body.question || "").trim();
+            history = body.history || [];
           } catch(e) {}
-          let answer = "I'm Didar's AI assistant! Didar is an AI Automation Specialist, Web Developer, App Developer, and Reverse Engineer based in Dhaka, Bangladesh. Feel free to connect via the phone on the desk or send a message via the contact form!";
-          if (/project|build|portfolio|work/.test(q)) {
-            answer = "Didar's featured projects include Kishan (AI Agro-Intelligence Platform & DAM Market Tracker), Letter Portfolio (Interactive Next.js Web Experience), E-Commerce AI Sales Agent (Autonomous 24/7 Telegram Representative), and Facebook 24/7 AI Automation System. Explore them on the ultrawide monitor!";
-          } else if (/contact|email|phone|hire|whatsapp|message/.test(q)) {
-            answer = "You can contact Didar at itsdidar60@gmail.com or via WhatsApp at +880 1631-188500. You can also send an instant message using the contact form on his phone!";
-          } else if (/skill|stack|tech|python|react|app/.test(q)) {
-            answer = "Didar's core expertise spans AI Automation & Agents (LangChain, OpenAI APIs, Workflow Orchestration), Full-Stack Modern Web (React, Node.js, Next.js, Three.js), Mobile App Development, and Reverse Engineering.";
+
+          if (!q) {
+            return new Response(JSON.stringify({ answer: "হ্যালো! কীভাবে সাহায্য করতে পারি? (Ask me anything about Didar in Bengali or English!)" }), {
+              status: 200,
+              headers: { 'Content-Type': 'application/json' }
+            });
           }
-          return Promise.resolve(new Response(JSON.stringify({ answer: answer }), {
+
+          // Key commands
+          const qLower = q.toLowerCase();
+          const setKeyMatch = q.match(/^(?:key|gemini)\s+([A-Za-z0-9_\-]{20,})/i);
+          if (setKeyMatch) {
+            const key = setKeyMatch[1];
+            localStorage.setItem('didar_gemini_key', key);
+            const msg = /[\u0980-\u09FF]/.test(q)
+              ? "✅ দারুণ! আপনার Gemini API Key সফলভাবে সেভ করা হয়েছে। এখন আমি সরাসরি Google Gemini AI দিয়ে যেকোনো প্রশ্নের উত্তর দিতে পারব!"
+              : "✅ Google Gemini API key saved successfully! I am now connected directly to live Gemini AI.";
+            return new Response(JSON.stringify({ answer: msg }), {
+              status: 200,
+              headers: { 'Content-Type': 'application/json' }
+            });
+          }
+
+          if (/^(?:clear|reset)\s+key/i.test(qLower)) {
+            localStorage.removeItem('didar_gemini_key');
+            const msg = /[\u0980-\u09FF]/.test(q)
+              ? "🔄 API Key রিমুভ করা হয়েছে। এখন বিল্ট-ইন লোকাল AI অ্যাসিস্ট্যান্ট সক্রিয়।"
+              : "🔄 API key removed. Reverted to built-in local AI assistant mode.";
+            return new Response(JSON.stringify({ answer: msg }), {
+              status: 200,
+              headers: { 'Content-Type': 'application/json' }
+            });
+          }
+
+          // If Gemini API Key exists
+          const apiKey = localStorage.getItem('didar_gemini_key') || window.GEMINI_API_KEY;
+          if (apiKey) {
+            const geminiAnswer = await fetchGeminiAI(q, history, apiKey);
+            if (geminiAnswer) {
+              return new Response(JSON.stringify({ answer: geminiAnswer }), {
+                status: 200,
+                headers: { 'Content-Type': 'application/json' }
+              });
+            }
+          }
+
+          // Local Conversational AI
+          const answer = generateLocalAIResponse(q, history);
+          return new Response(JSON.stringify({ answer: answer }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' }
-          }));
+          });
         }
       }
       return origFetch.apply(this, arguments);
@@ -68,6 +264,40 @@
         }
       }
     })();</script><script>if(!document.documentElement.classList.contains("flat"))for(const href of ["/_astro/desk-room.Bab4A1Fx.js","/_astro/preload-helper.CCXDEYxN.js","/_astro/three.core.DlbFt99g.js"])document.head.append(Object.assign(document.createElement("link"),{rel:"modulepreload",href}))</script><link rel="stylesheet" href="/_astro/index.BT68zTlf.css"><style>
+
+/* TV AI Chatbot Screen Enhancements */
+.tv .msg {
+  white-space: pre-wrap !important;
+  font-family: 'Space Grotesk', 'Noto Sans Bengali', 'Hind Siliguri', system-ui, -apple-system, sans-serif !important;
+  line-height: 1.55 !important;
+  font-size: 0.82em !important;
+  letter-spacing: 0.2px !important;
+}
+.tv .msg.him {
+  color: #1a1e2d !important;
+  background: #ffffff !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12) !important;
+  font-weight: 500 !important;
+}
+.tv .msg.you {
+  background: #141829 !important;
+  color: #00ffbb !important;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+}
+.tv .msg a {
+  color: #0066ee !important;
+  font-weight: 600 !important;
+  text-decoration: underline !important;
+}
+.tv input {
+  font-family: 'Space Grotesk', 'Noto Sans Bengali', 'Hind Siliguri', system-ui, sans-serif !important;
+  font-size: 0.85em !important;
+}
+.tv input::placeholder {
+  color: #7b82a0 !important;
+}
+
 .sound {
   min-width: 48px !important;
   width: auto !important;
@@ -474,7 +704,7 @@
     <article class="note"><span class="pin"></span><h3>Kazir Pagla A.T. Inst.</h3><p class="role">Secondary School Certificate (SSC)</p><p class="when">SSC Batch 2022 &middot; GPA 4.89</p><ul><li>Science group with outstanding academic achievements in mathematics and sciences.</li><li>Built foundational competencies in computer algorithms, analytical problem-solving, and logic.</li></ul></article>
   </div>
 </section><!-- His TV's surface: his screen, still pink, his eyes at the top, and
-         under them who he is and a box to ask him something. --><section class="surface tv" id="about" aria-label="Ask about Didar" hidden><h2 class="kicker">About</h2><div class="eyes" aria-hidden="true"><span></span><span></span></div><div class="log" id="chat-log" aria-live="polite" data-scroll><p class="msg him">Hey, I'm Didar! Well, the AI version, the one that never sleeps. If you want to connect with the real Didar, check the phone on the desk or drop an email!</p></div><form class="ask" id="ask"><input id="ask-q" name="q" maxlength="200" autocomplete="off" placeholder="Ask a question about Didar..." aria-label="Ask a question about Didar"><button type="submit">Send</button></form></section></main><script type="module" src="/_astro/index.astro_astro_type_script_index_0_lang.BXuEK2gk.js"></script><!-- Awwwards' nominee ribbon, as they give it; last, so it is the last stop for the keyboard --><div id="awwwards" style="display:none;" style="position: fixed; z-index: 999; transform: translateY(-50%); top: 50%;  right: 0"><a href="https://www.awwwards.com/sites/hamzas-desk" target="_blank" rel="noopener" aria-label="Hamza's Desk, nominee on Awwwards"><svg width="53.08" height="171.358" aria-hidden="true"><path class="js-color-bg" fill="black" d="M0 0h53.08v171.358H0z"></path><g class="js-color-text" fill="white"><path d="M20.048 153.585v-2.002l6.752-3.757h-6.752v-1.9h10.23v2.002l-6.752 3.757h6.752v1.9zM29.899 142.382a3.317 3.317 0 0 1-1.359 1.293c-.575.297-1.223.446-1.944.446-.721 0-1.369-.149-1.944-.446a3.317 3.317 0 0 1-1.359-1.293c-.331-.564-.497-1.232-.497-2.003 0-.769.166-1.437.497-2.002a3.332 3.332 0 0 1 1.359-1.294c.575-.297 1.224-.445 1.944-.445.722 0 1.369.148 1.944.445a3.326 3.326 0 0 1 1.359 1.294c.33.565.496 1.233.496 2.002.001.77-.166 1.438-.496 2.003m-1.703-3.348c-.435-.331-.967-.497-1.601-.497s-1.167.166-1.601.497c-.434.332-.65.78-.65 1.345s.217 1.014.65 1.346c.434.33.967.496 1.601.496s1.166-.166 1.601-.496c.434-.332.649-.78.649-1.346.001-.565-.215-1.013-.649-1.345M22.912 134.996v-1.812h1.185c-.43-.283-.752-.593-.973-.929-.219-.336-.329-.732-.329-1.19 0-.479.127-.902.38-1.272.254-.37.635-.633 1.141-.79-.478-.262-.851-.591-1.118-.985a2.221 2.221 0 0 1-.402-1.265c0-.682.2-1.218.599-1.607.4-.391.957-.585 1.668-.585h5.218v1.812H25.37c-.682 0-1.023.303-1.023.907 0 .467.264.85.789 1.146.527.299 1.286.446 2.28.446h2.865v1.813H25.37c-.682 0-1.023.303-1.023.906 0 .468.275.851.826 1.147.551.298 1.352.446 2.404.446h2.704v1.812h-7.369zM21.626 122.457c-.225.224-.502.336-.833.336s-.608-.112-.833-.336a1.128 1.128 0 0 1-.336-.833c0-.331.111-.609.336-.833.225-.225.502-.336.833-.336s.608.111.833.336c.225.224.337.502.337.833 0 .332-.112.608-.337.833m1.286-1.739h7.366v1.813h-7.366v-1.813zM22.912 118.668v-1.812h1.185a3.348 3.348 0 0 1-.951-1.009 2.434 2.434 0 0 1-.351-1.272c0-.681.19-1.229.57-1.644.38-.414.931-.621 1.651-.621h5.263v1.812h-4.722c-.418 0-.727.096-.92.285-.195.19-.293.447-.293.769 0 .302.116.58.351.833.233.254.577.458 1.03.613.453.156.992.234 1.615.234h2.938v1.812h-7.366zM29.833 109.129a3.33 3.33 0 0 1-1.432 1.169 4.535 4.535 0 0 1-1.805.373 4.537 4.537 0 0 1-1.807-.373c-.579-.248-1.057-.638-1.432-1.169s-.563-1.196-.563-1.995c0-.771.183-1.413.549-1.93a3.28 3.28 0 0 1 1.382-1.141 4.221 4.221 0 0 1 1.709-.364h.746v5.071c.447-.02.838-.183 1.168-.49.332-.307.498-.724.498-1.248 0-.41-.093-.754-.277-1.031-.186-.278-.473-.529-.863-.753l.542-1.462c.69.303 1.224.724 1.592 1.265.371.541.556 1.235.556 2.083 0 .799-.188 1.464-.563 1.995m-4.085-3.574c-.41.088-.746.261-1.009.52-.262.258-.395.61-.395 1.06 0 .428.137.784.409 1.067.272.282.604.458.994.525v-3.172zM29.833 100.878c-.375.531-.852.921-1.432 1.169a4.552 4.552 0 0 1-3.612 0c-.579-.248-1.057-.638-1.432-1.169s-.563-1.196-.563-1.995c0-.77.183-1.412.549-1.93a3.278 3.278 0 0 1 1.382-1.14 4.222 4.222 0 0 1 1.709-.365h.746v5.072a1.794 1.794 0 0 0 1.168-.49c.332-.307.498-.724.498-1.249 0-.41-.093-.753-.277-1.031-.186-.277-.473-.528-.863-.753l.542-1.462c.69.302 1.224.724 1.592 1.265.371.541.556 1.234.556 2.083 0 .799-.188 1.464-.563 1.995m-4.085-3.573c-.41.088-.746.261-1.009.519-.262.258-.395.611-.395 1.06 0 .429.137.784.409 1.067.272.282.604.458.994.526v-3.172zM35.481 16.926l-4.782 14.969h-3.266l-2.584-9.682-2.584 9.682h-3.268l-4.781-14.969h3.713l2.673 10.276 2.524-10.276h3.445l2.524 10.276 2.674-10.276zM37.979 27.083c1.426 0 2.495 1.068 2.495 2.495 0 1.425-1.069 2.495-2.495 2.495-1.425 0-2.495-1.07-2.495-2.495-.001-1.427 1.07-2.495 2.495-2.495"></path></g></svg></a></div>
+         under them who he is and a box to ask him something. --><section class="surface tv" id="about" aria-label="Ask about Didar" hidden><h2 class="kicker">About</h2><div class="eyes" aria-hidden="true"><span></span><span></span></div><div class="log" id="chat-log" aria-live="polite" data-scroll><p class="msg him">Hey, I'm Didar! Well, the AI version, the one that never sleeps. If you want to connect with the real Didar, check the phone on the desk or drop an email! (যেকোনো প্রশ্ন বাংলায় বা ইংরেজিতে করতে পারেন ✨)</p></div><form class="ask" id="ask"><input id="ask-q" name="q" maxlength="200" autocomplete="off" placeholder="Ask about Didar (বাংলা বা English)..." aria-label="Ask a question about Didar"><button type="submit">Send</button></form></section></main><script type="module" src="/_astro/index.astro_astro_type_script_index_0_lang.BXuEK2gk.js"></script><!-- Awwwards' nominee ribbon, as they give it; last, so it is the last stop for the keyboard --><div id="awwwards" style="display:none;" style="position: fixed; z-index: 999; transform: translateY(-50%); top: 50%;  right: 0"><a href="https://www.awwwards.com/sites/hamzas-desk" target="_blank" rel="noopener" aria-label="Hamza's Desk, nominee on Awwwards"><svg width="53.08" height="171.358" aria-hidden="true"><path class="js-color-bg" fill="black" d="M0 0h53.08v171.358H0z"></path><g class="js-color-text" fill="white"><path d="M20.048 153.585v-2.002l6.752-3.757h-6.752v-1.9h10.23v2.002l-6.752 3.757h6.752v1.9zM29.899 142.382a3.317 3.317 0 0 1-1.359 1.293c-.575.297-1.223.446-1.944.446-.721 0-1.369-.149-1.944-.446a3.317 3.317 0 0 1-1.359-1.293c-.331-.564-.497-1.232-.497-2.003 0-.769.166-1.437.497-2.002a3.332 3.332 0 0 1 1.359-1.294c.575-.297 1.224-.445 1.944-.445.722 0 1.369.148 1.944.445a3.326 3.326 0 0 1 1.359 1.294c.33.565.496 1.233.496 2.002.001.77-.166 1.438-.496 2.003m-1.703-3.348c-.435-.331-.967-.497-1.601-.497s-1.167.166-1.601.497c-.434.332-.65.78-.65 1.345s.217 1.014.65 1.346c.434.33.967.496 1.601.496s1.166-.166 1.601-.496c.434-.332.649-.78.649-1.346.001-.565-.215-1.013-.649-1.345M22.912 134.996v-1.812h1.185c-.43-.283-.752-.593-.973-.929-.219-.336-.329-.732-.329-1.19 0-.479.127-.902.38-1.272.254-.37.635-.633 1.141-.79-.478-.262-.851-.591-1.118-.985a2.221 2.221 0 0 1-.402-1.265c0-.682.2-1.218.599-1.607.4-.391.957-.585 1.668-.585h5.218v1.812H25.37c-.682 0-1.023.303-1.023.907 0 .467.264.85.789 1.146.527.299 1.286.446 2.28.446h2.865v1.813H25.37c-.682 0-1.023.303-1.023.906 0 .468.275.851.826 1.147.551.298 1.352.446 2.404.446h2.704v1.812h-7.369zM21.626 122.457c-.225.224-.502.336-.833.336s-.608-.112-.833-.336a1.128 1.128 0 0 1-.336-.833c0-.331.111-.609.336-.833.225-.225.502-.336.833-.336s.608.111.833.336c.225.224.337.502.337.833 0 .332-.112.608-.337.833m1.286-1.739h7.366v1.813h-7.366v-1.813zM22.912 118.668v-1.812h1.185a3.348 3.348 0 0 1-.951-1.009 2.434 2.434 0 0 1-.351-1.272c0-.681.19-1.229.57-1.644.38-.414.931-.621 1.651-.621h5.263v1.812h-4.722c-.418 0-.727.096-.92.285-.195.19-.293.447-.293.769 0 .302.116.58.351.833.233.254.577.458 1.03.613.453.156.992.234 1.615.234h2.938v1.812h-7.366zM29.833 109.129a3.33 3.33 0 0 1-1.432 1.169 4.535 4.535 0 0 1-1.805.373 4.537 4.537 0 0 1-1.807-.373c-.579-.248-1.057-.638-1.432-1.169s-.563-1.196-.563-1.995c0-.771.183-1.413.549-1.93a3.28 3.28 0 0 1 1.382-1.141 4.221 4.221 0 0 1 1.709-.364h.746v5.071c.447-.02.838-.183 1.168-.49.332-.307.498-.724.498-1.248 0-.41-.093-.754-.277-1.031-.186-.278-.473-.529-.863-.753l.542-1.462c.69.303 1.224.724 1.592 1.265.371.541.556 1.235.556 2.083 0 .799-.188 1.464-.563 1.995m-4.085-3.574c-.41.088-.746.261-1.009.52-.262.258-.395.61-.395 1.06 0 .428.137.784.409 1.067.272.282.604.458.994.525v-3.172zM29.833 100.878c-.375.531-.852.921-1.432 1.169a4.552 4.552 0 0 1-3.612 0c-.579-.248-1.057-.638-1.432-1.169s-.563-1.196-.563-1.995c0-.77.183-1.412.549-1.93a3.278 3.278 0 0 1 1.382-1.14 4.222 4.222 0 0 1 1.709-.365h.746v5.072a1.794 1.794 0 0 0 1.168-.49c.332-.307.498-.724.498-1.249 0-.41-.093-.753-.277-1.031-.186-.277-.473-.528-.863-.753l.542-1.462c.69.302 1.224.724 1.592 1.265.371.541.556 1.234.556 2.083 0 .799-.188 1.464-.563 1.995m-4.085-3.573c-.41.088-.746.261-1.009.519-.262.258-.395.611-.395 1.06 0 .429.137.784.409 1.067.272.282.604.458.994.526v-3.172zM35.481 16.926l-4.782 14.969h-3.266l-2.584-9.682-2.584 9.682h-3.268l-4.781-14.969h3.713l2.673 10.276 2.524-10.276h3.445l2.524 10.276 2.674-10.276zM37.979 27.083c1.426 0 2.495 1.068 2.495 2.495 0 1.425-1.069 2.495-2.495 2.495-1.425 0-2.495-1.07-2.495-2.495-.001-1.427 1.07-2.495 2.495-2.495"></path></g></svg></a></div>
 <script>
   (() => {
     function updateProjectCount() {
