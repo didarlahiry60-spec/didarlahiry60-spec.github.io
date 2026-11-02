@@ -96,6 +96,29 @@
   box-shadow: 0 0 18px rgba(255, 158, 187, 0.4) !important;
 }
 
+
+/* Top Navbar Ambient Clock */
+.top-nav-clock {
+  font-family: 'Space Grotesk', monospace !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #e2e8f0 !important;
+  letter-spacing: 0.6px !important;
+  background: rgba(18, 24, 38, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  padding: 6px 14px !important;
+  border-radius: 99px !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  z-index: 100 !important;
+  backdrop-filter: blur(8px) !important;
+}
+.top-nav-clock:before {
+  content: '🕒';
+  font-size: 12px;
+}
 /* Enhanced Projects Monitor Typography & Colors */
 .dbar {
   display: flex !important;
@@ -376,11 +399,11 @@
          onto the screen, laid exactly over it; until then the screen in the
          scene plays the chosen project's demo as a texture. --><button class="undock" id="undock" type="button" hidden><span aria-hidden="true">&#9664;</span> Back to the room</button><!-- Docked on his badges: the one before, turn it over, the next --><div class="badge-nav" id="badge-nav" role="group" aria-label="Experience & Education" hidden><button type="button" class="prev" aria-label="Previous badge">&#8249;</button><span class="count">01 / 03</span><button type="button" class="next" aria-label="Next badge">&#8250;</button><p class="said" aria-live="polite"></p></div><!-- The index: every section one click away, without finding its prop --><!-- The index: every section one click away. A glass pill with the
          sections numbered and a highlight that slides to the one open; on a
-         phone, a tab bar along the bottom, an icon over each name. --><nav class="index" aria-label="Sections"><span class="ind" aria-hidden="true"></span><button type="button" data-go="projects"><span class="n">01</span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v11H3zM9 20h6M12 16v4"></path></svg><span class="l">Projects</span></button><button type="button" data-go="experience"><span class="n">02</span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h18v14H3z"></path><path d="M7 8h4v5H7zM13 8h4M13 11h4M13 14h3"></path></svg><span class="l">Experience</span></button><button type="button" data-go="education"><span class="n">03</span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"></path></svg><span class="l">Education</span></button><button type="button" data-go="about"><span class="n">04</span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"></path><path d="M8 9.5h8M8 12.5h5"></path></svg><span class="l">About</span></button><button type="button" data-go="contact"><span class="n">05</span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2h8a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM11 18h2"></path></svg><span class="l">Contact</span></button></nav><!-- the room's sound, on or off (sound.ts): its bars playing while it is on --><button class="sound" id="sound" type="button" aria-pressed="false" aria-label="Sound" title="Toggle Lo-Fi Ambient Sound"><span class="sound-tag">SOUND</span><i></i><i></i><i></i><i></i></button><!-- The monitor's surface: his desktop, a tiling one as on Linux. All four
+         phone, a tab bar along the bottom, an icon over each name. --><nav class="index" aria-label="Sections"><span class="ind" aria-hidden="true"></span><button type="button" data-go="projects"><span class="n">01</span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v11H3zM9 20h6M12 16v4"></path></svg><span class="l">Projects</span></button><button type="button" data-go="experience"><span class="n">02</span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h18v14H3z"></path><path d="M7 8h4v5H7zM13 8h4M13 11h4M13 14h3"></path></svg><span class="l">Experience</span></button><button type="button" data-go="education"><span class="n">03</span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"></path></svg><span class="l">Education</span></button><button type="button" data-go="about"><span class="n">04</span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"></path><path d="M8 9.5h8M8 12.5h5"></path></svg><span class="l">About</span></button><button type="button" data-go="contact"><span class="n">05</span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2h8a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM11 18h2"></path></svg><span class="l">Contact</span></button></nav><!-- the room's sound, on or off (sound.ts): its bars playing while it is on --><div class="top-nav-clock" data-clock></div><button class="sound" id="sound" type="button" aria-pressed="false" aria-label="Sound" title="Toggle Lo-Fi Ambient Sound"><span class="sound-tag">SOUND</span><i></i><i></i><i></i><i></i></button><!-- The monitor's surface: his desktop, a tiling one as on Linux. All four
          projects tiled, a terminal beside them; choosing one opens it on its
          own workspace, the app with its recording on the left and its README
          in a terminal on the right. The bar's workspaces, a tile, or a
-         window's close and minimise choose (desk-room.ts, showProject). --><section class="surface desk" id="projects" aria-label="Projects" hidden><h2 class="kicker">Projects</h2><div class="dbar"><nav class="ws" aria-label="Projects"><button type="button" data-p="" aria-pressed="true">0 <b>all</b></button><button type="button" data-p="edi" aria-pressed="false">1 <b>kishan</b></button><button type="button" data-p="resumewesume" aria-pressed="false">2 <b>letter-port</b></button><button type="button" data-p="bandsy" aria-pressed="false">3 <b>sales-bot</b></button><button type="button" data-p="mentora" aria-pressed="false">4 <b>fb-auto</b></button></nav><span class="clock" data-clock></span><span class="tray" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M1.5 6a9 9 0 0 1 13 0M4 8.6a5.4 5.4 0 0 1 8 0M6.4 11.1a2 2 0 0 1 3.2 0"></path></svg><svg viewBox="0 0 16 16"><path d="M2 6h3l4-3v10l-4-3H2zM11.5 5.5a3.5 3.5 0 0 1 0 5"></path></svg><span>BST</span></span></div><div class="dview" data-scroll><div class="tiles">
+         window's close and minimise choose (desk-room.ts, showProject). --><section class="surface desk" id="projects" aria-label="Projects" hidden><h2 class="kicker">Projects</h2><div class="dbar"><nav class="ws" aria-label="Projects"><button type="button" data-p="" aria-pressed="true">0 <b>all</b></button><button type="button" data-p="edi" aria-pressed="false">1 <b>kishan</b></button><button type="button" data-p="resumewesume" aria-pressed="false">2 <b>letter-port</b></button><button type="button" data-p="bandsy" aria-pressed="false">3 <b>sales-bot</b></button><button type="button" data-p="mentora" aria-pressed="false">4 <b>fb-auto</b></button></nav><span class="tray" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M1.5 6a9 9 0 0 1 13 0M4 8.6a5.4 5.4 0 0 1 8 0M6.4 11.1a2 2 0 0 1 3.2 0"></path></svg><svg viewBox="0 0 16 16"><path d="M2 6h3l4-3v10l-4-3H2zM11.5 5.5a3.5 3.5 0 0 1 0 5"></path></svg><span>BST</span></span></div><div class="dview" data-scroll><div class="tiles">
   <button type="button" class="tile" data-p="edi" style="grid-area: edi">
     <span class="t"><b style="color: #4ade80;">1. Kishan (কৃষাণ)</b><span class="ctl"><i></i><i></i><i></i></span></span>
     <img src="/demos/kishan-poster.webp" alt="Kishan AI Platform">
