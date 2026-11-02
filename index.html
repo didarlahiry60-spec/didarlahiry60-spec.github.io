@@ -97,32 +97,56 @@
 }
 
 /* Enhanced Projects Monitor Typography & Colors */
-#projects {
-  font-size: clamp(14px, 1.45vw, 19px) !important;
-}
 .dbar {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
   padding: 6px 14px !important;
-  font-size: 0.9em !important;
+  min-height: 38px !important;
+  gap: 12px !important;
+}
+.dbar .ws {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  flex-shrink: 0 !important;
 }
 .dbar .ws button {
   font-family: 'Space Grotesk', -apple-system, sans-serif !important;
-  font-size: 1em !important;
+  font-size: 13px !important;
   font-weight: 600 !important;
   letter-spacing: 0.3px !important;
   color: #cbd5e1 !important;
-  padding: 6px 14px !important;
-  border-radius: 8px !important;
+  padding: 4px 10px !important;
+  border-radius: 6px !important;
   transition: all 0.2s ease !important;
+  white-space: nowrap !important;
 }
 .dbar .ws button[aria-pressed="true"] {
   color: #ffffff !important;
   background: rgba(255, 158, 187, 0.25) !important;
-  border: 1.5px solid rgba(255, 158, 187, 0.6) !important;
-  box-shadow: 0 0 16px rgba(255, 158, 187, 0.35) !important;
+  border: 1px solid rgba(255, 158, 187, 0.6) !important;
+  box-shadow: 0 0 12px rgba(255, 158, 187, 0.35) !important;
 }
 .dbar .ws button:hover {
   color: #ffffff !important;
   background: rgba(255, 255, 255, 0.1) !important;
+}
+.dbar .clock {
+  font-family: 'Space Grotesk', monospace !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #ffffff !important;
+  letter-spacing: 0.5px !important;
+  margin-left: auto !important;
+  margin-right: 18px !important;
+  white-space: nowrap !important;
+}
+.dbar .tray {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-shrink: 0 !important;
 }
 
 .tile {
@@ -141,7 +165,7 @@
   padding: 8px 14px !important;
   background: rgba(18, 24, 38, 0.98) !important;
   border-bottom: 1.5px solid rgba(255, 255, 255, 0.12) !important;
-  font-size: 1.05em !important;
+  font-size: 13px !important;
   font-weight: 700 !important;
 }
 .tile .meta {
@@ -155,12 +179,12 @@
 }
 .tile .nm {
   font-family: 'Space Grotesk', sans-serif !important;
-  font-size: 1.15em !important;
+  font-size: 14px !important;
   font-weight: 800 !important;
   letter-spacing: 0.2px !important;
 }
 .tile .pitch {
-  font-size: 0.95em !important;
+  font-size: 12px !important;
   color: #e2e8f0 !important;
   font-weight: 500 !important;
   line-height: 1.4 !important;
@@ -176,13 +200,12 @@
 /* Terminal Tile fetch info */
 .tile.term {
   border: 2px solid rgba(255, 158, 187, 0.3) !important;
-  font-size: 0.92em !important;
 }
 .tile.term .sh {
   padding: 10px 14px !important;
 }
 .tile.term .fetch .ln {
-  font-size: 1.05em !important;
+  font-size: 12.5px !important;
   line-height: 1.5 !important;
   color: #f1f5f9 !important;
 }
@@ -200,30 +223,30 @@
   border: 2px solid rgba(96, 165, 250, 0.5) !important;
 }
 .appbody h3 {
-  font-size: 1.6em !important;
+  font-size: 22px !important;
   color: #ffffff !important;
   font-weight: 800 !important;
 }
 .appbody .tagline {
-  font-size: 1.15em !important;
+  font-size: 15px !important;
   color: #cbd5e1 !important;
   line-height: 1.6 !important;
 }
 .readme h4 {
   color: #ff9ebb !important;
-  font-size: 1.3em !important;
+  font-size: 16px !important;
   font-weight: 800 !important;
   margin-top: 18px !important;
   margin-bottom: 8px !important;
 }
 .readme p, .readme li {
-  font-size: 1.1em !important;
+  font-size: 14px !important;
   color: #f8fafc !important;
   line-height: 1.7 !important;
 }
 .readme .cmd {
   color: #4ade80 !important;
-  font-size: 1.15em !important;
+  font-size: 15px !important;
   font-weight: 700 !important;
 }
 .readme .deps em {
@@ -357,7 +380,7 @@
          projects tiled, a terminal beside them; choosing one opens it on its
          own workspace, the app with its recording on the left and its README
          in a terminal on the right. The bar's workspaces, a tile, or a
-         window's close and minimise choose (desk-room.ts, showProject). --><section class="surface desk" id="projects" aria-label="Projects" hidden><h2 class="kicker">Projects</h2><div class="dbar"><nav class="ws" aria-label="Projects"><button type="button" data-p="" aria-pressed="true"><b>All Projects [4]</b></button><button type="button" data-p="edi" aria-pressed="false">1 <b>Kishan</b></button><button type="button" data-p="resumewesume" aria-pressed="false">2 <b>Letter Portfolio</b></button><button type="button" data-p="bandsy" aria-pressed="false">3 <b>AI Sales Agent</b></button><button type="button" data-p="mentora" aria-pressed="false">4 <b>FB Automation</b></button></nav><span class="clock" data-clock></span><span class="tray" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M1.5 6a9 9 0 0 1 13 0M4 8.6a5.4 5.4 0 0 1 8 0M6.4 11.1a2 2 0 0 1 3.2 0"></path></svg><svg viewBox="0 0 16 16"><path d="M2 6h3l4-3v10l-4-3H2zM11.5 5.5a3.5 3.5 0 0 1 0 5"></path></svg><span>BST</span></span></div><div class="dview" data-scroll><div class="tiles">
+         window's close and minimise choose (desk-room.ts, showProject). --><section class="surface desk" id="projects" aria-label="Projects" hidden><h2 class="kicker">Projects</h2><div class="dbar"><nav class="ws" aria-label="Projects"><button type="button" data-p="" aria-pressed="true">0 <b>all</b></button><button type="button" data-p="edi" aria-pressed="false">1 <b>kishan</b></button><button type="button" data-p="resumewesume" aria-pressed="false">2 <b>letter-port</b></button><button type="button" data-p="bandsy" aria-pressed="false">3 <b>sales-bot</b></button><button type="button" data-p="mentora" aria-pressed="false">4 <b>fb-auto</b></button></nav><span class="clock" data-clock></span><span class="tray" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M1.5 6a9 9 0 0 1 13 0M4 8.6a5.4 5.4 0 0 1 8 0M6.4 11.1a2 2 0 0 1 3.2 0"></path></svg><svg viewBox="0 0 16 16"><path d="M2 6h3l4-3v10l-4-3H2zM11.5 5.5a3.5 3.5 0 0 1 0 5"></path></svg><span>BST</span></span></div><div class="dview" data-scroll><div class="tiles">
   <button type="button" class="tile" data-p="edi" style="grid-area: edi">
     <span class="t"><b style="color: #4ade80;">1. Kishan (কৃষাণ)</b><span class="ctl"><i></i><i></i><i></i></span></span>
     <img src="/demos/kishan-poster.webp" alt="Kishan AI Platform">
