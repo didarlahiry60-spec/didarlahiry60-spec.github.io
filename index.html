@@ -295,20 +295,7 @@
           document.documentElement.classList.add("flat");
         }
       })();
-    </script><!-- the room's files, fetched now, in parallel with its script; not for the page, which draws no room --><script>(function(){const fetched = ["/bake/lightmap-0.ktx2?v=1791213460","/bake/lightmask-0.ktx2?v=1791213460","/bake/room-lit.glb?v=1791213460","/bake/lightmap.json","/basis/basis_transcoder.wasm","/basis/basis_transcoder.js","/models/monstera.glb","/models/books.glb","/models/cat.glb","/models/couch.glb","/models/chair.glb","/models/keyboard.glb","/models/desk.glb","/models/monitor.glb","/models/mouse.glb","/models/street-lamp.glb"];
-
-      if (!document.documentElement.classList.contains("flat")) {
-        for (const href of fetched) {
-          const l = document.createElement("link");
-          l.rel = "preload";
-          l.as = "fetch";
-          l.crossOrigin = "anonymous";
-          l.fetchPriority = "low";                                    // after the room's script and the fonts: ahead of them, they held the script up
-          l.href = href;
-          document.head.append(l);
-        }
-      }
-    })();</script><script>if(!document.documentElement.classList.contains("flat"))for(const href of ["/_astro/desk-room.Bab4A1Fx.js","/_astro/preload-helper.CCXDEYxN.js","/_astro/three.core.DlbFt99g.js"])document.head.append(Object.assign(document.createElement("link"),{rel:"modulepreload",href}))</script><link rel="stylesheet" href="/_astro/index.BT68zTlf.css"><style>
+    </script><script>if(!document.documentElement.classList.contains("flat"))for(const href of ["/_astro/desk-room.Bab4A1Fx.js","/_astro/preload-helper.CCXDEYxN.js","/_astro/three.core.DlbFt99g.js"])document.head.append(Object.assign(document.createElement("link"),{rel:"modulepreload",href}))</script><link rel="stylesheet" href="/_astro/index.BT68zTlf.css"><style>
 
 /* TV AI Chatbot Screen Enhancements */
 .tv .msg {
