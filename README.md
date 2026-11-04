@@ -58,7 +58,7 @@ npx serve -l 3000
 6. **ডেস্কের স্মার্টফোন (`04 CONTACT`):**
    - ক্যামেরা ডেস্কে রাখা স্মার্টফোনে সরাসরি ওভারহেড ডক করে।
    - লাইভ ঢাকা ঘড়ি ও তারিখ (`DHAKA · GMT+6`)।
-   - সরাসরি আপনার ইমেইল (`itsdidar60@gmail.com`), GitHub (`didar-lahiry`), LinkedIn, WhatsApp (`+880 1631-188500`) এবং এক ক্লিকে সিভি ডাউনলোডের অপশন (`DIDAR-LAHIRY (Resume).pdf`)।
+   - সরাসরি আপনার ইমেইল (`hereisdidar@gmail.com`), GitHub (`didar-lahiry`), LinkedIn, WhatsApp (`+880 1631-188500`) এবং এক ক্লিকে সিভি ডাউনলোডের অপশন (`DIDAR-LAHIRY (Resume).pdf`)।
 
 ---
 
