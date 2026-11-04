@@ -22,12 +22,8 @@ def make_perfect_poster(filename, app_name, url_bar, accent_color, hero_tag, her
     f_nav = ImageFont.truetype(font_bold, 16)
     f_browser = ImageFont.truetype(font_reg, 15)
 
-    # Lighter soft text color derived from accent
-    accent_text = (
-        min(255, accent_color[0] + 50),
-        min(255, accent_color[1] + 50),
-        min(255, accent_color[2] + 50)
-    )
+    # Black text for high-contrast, ultra-crisp readability inside all colorful boxes
+    box_text_black = (10, 15, 24)
 
     # Outer Browser / OS Window Frame
     draw.rounded_rectangle([(25, 20), (1255, 700)], radius=16, fill=(18, 22, 34, 255), outline=(50, 62, 88, 255), width=2)
@@ -61,9 +57,9 @@ def make_perfect_poster(filename, app_name, url_bar, accent_color, hero_tag, her
     y_nav = 165
     for idx, (label, is_active) in enumerate(sidebar_items):
         if is_active:
-            # Active sidebar item: Soft tinted frosted glass with delicate border & light accent text
-            draw.rounded_rectangle([(40, y_nav - 5), (265, y_nav + 34)], radius=8, fill=(accent_color[0], accent_color[1], accent_color[2], 42), outline=(accent_color[0], accent_color[1], accent_color[2], 130), width=1)
-            draw.text((55, y_nav + 4), label, fill=accent_text, font=f_nav)
+            # Active sidebar item: Colorful box with deep BLACK text!
+            draw.rounded_rectangle([(40, y_nav - 5), (265, y_nav + 34)], radius=8, fill=accent_color)
+            draw.text((55, y_nav + 4), label, fill=box_text_black, font=f_nav)
         else:
             draw.text((55, y_nav + 4), label, fill=(170, 182, 205), font=f_nav)
         y_nav += 48
@@ -72,15 +68,15 @@ def make_perfect_poster(filename, app_name, url_bar, accent_color, hero_tag, her
     draw.rounded_rectangle([(40, 580), (265, 665)], radius=10, fill=(22, 27, 42, 255), outline=(50, 62, 88, 255), width=1)
     draw.text((55, 595), "SYSTEM TELEMETRY", fill=(160, 175, 205), font=f_sm)
     
-    # Status Pill
-    draw.rounded_rectangle([(50, 622), (255, 654)], radius=6, fill=(accent_color[0], accent_color[1], accent_color[2], 38), outline=(accent_color[0], accent_color[1], accent_color[2], 120), width=1)
-    draw.text((65, 628), "99.98% High Uptime", fill=accent_text, font=f_pill)
+    # Status Pill: Colorful box with deep BLACK text!
+    draw.rounded_rectangle([(50, 622), (255, 654)], radius=6, fill=accent_color)
+    draw.text((65, 628), "99.98% High Uptime", fill=box_text_black, font=f_pill)
 
     # Main Workspace Hero Card (width: 920px: 305 to 1225)
     hero_box_x1, hero_box_x2 = 305, 1225
     draw.rounded_rectangle([(hero_box_x1, 110), (hero_box_x2, 275)], radius=14, fill=(21, 26, 40, 255), outline=(accent_color[0], accent_color[1], accent_color[2], 110), width=1)
     
-    # Top Tag Pill
+    # Top Tag Pill: Colorful box with deep BLACK text!
     pill_text = f"★ {hero_tag.upper()}"
     bbox_pill = draw.textbbox((0, 0), pill_text, font=f_pill)
     text_w = bbox_pill[2] - bbox_pill[0]
@@ -89,8 +85,8 @@ def make_perfect_poster(filename, app_name, url_bar, accent_color, hero_tag, her
     pill_x2 = pill_x1 + text_w + 28
     pill_y2 = pill_y1 + 34
 
-    draw.rounded_rectangle([(pill_x1, pill_y1), (pill_x2, pill_y2)], radius=7, fill=(accent_color[0], accent_color[1], accent_color[2], 42), outline=(accent_color[0], accent_color[1], accent_color[2], 130), width=1)
-    draw.text((pill_x1 + 14, pill_y1 + 8), pill_text, fill=accent_text, font=f_pill)
+    draw.rounded_rectangle([(pill_x1, pill_y1), (pill_x2, pill_y2)], radius=7, fill=accent_color)
+    draw.text((pill_x1 + 14, pill_y1 + 8), pill_text, fill=box_text_black, font=f_pill)
 
     # Hero Title
     draw.text((330, 178), hero_title[0], fill=(255, 255, 255), font=f_title_main)
@@ -105,7 +101,6 @@ def make_perfect_poster(filename, app_name, url_bar, accent_color, hero_tag, her
     desc_w = bbox_desc[2] - bbox_desc[0]
     safe_desc = hero_desc
     if desc_w > max_desc_w:
-        # Ellipsis clamp if ever needed
         while desc_w > max_desc_w and len(safe_desc) > 5:
             safe_desc = safe_desc[:-2]
             bbox_desc = draw.textbbox((0, 0), safe_desc + "...", font=f_desc)
@@ -132,7 +127,7 @@ def make_perfect_poster(filename, app_name, url_bar, accent_color, hero_tag, her
         # Header text
         draw.text((c_tl[0] + 16, c_tl[1] + 10), c_title, fill=(245, 248, 255), font=f_card_title)
         
-        # Header right badge - precisely right-aligned with safe padding
+        # Header right badge
         bbox_b = draw.textbbox((0, 0), c_badge, font=f_sm)
         badge_w = bbox_b[2] - bbox_b[0]
         draw.text((c_br[0] - badge_w - 18, c_tl[1] + 13), c_badge, fill=accent_color, font=f_sm)
@@ -142,7 +137,6 @@ def make_perfect_poster(filename, app_name, url_bar, accent_color, hero_tag, her
         max_line_w = (c_br[0] - c_tl[0]) - 48
         for line in c_items:
             draw.ellipse([(c_tl[0] + 16, y_c + 7), (c_tl[0] + 24, y_c + 15)], fill=accent_color)
-            # Safe width clamp
             bbox_line = draw.textbbox((0, 0), line, font=f_body)
             lw = bbox_line[2] - bbox_line[0]
             safe_line = line
@@ -155,15 +149,15 @@ def make_perfect_poster(filename, app_name, url_bar, accent_color, hero_tag, her
             draw.text((c_tl[0] + 32, y_c), safe_line, fill=(225, 235, 250), font=f_body)
             y_c += 28
 
-        # Card bottom pill tag
+        # Card bottom pill tag: Colorful box with deep BLACK text!
         bbox_tag = draw.textbbox((0, 0), c_tag, font=f_tag)
         tag_w = bbox_tag[2] - bbox_tag[0]
         tag_x1 = c_tl[0] + 16
         tag_y1 = c_br[1] - 36
         tag_x2 = min(tag_x1 + tag_w + 26, c_br[0] - 16)
         tag_y2 = tag_y1 + 28
-        draw.rounded_rectangle([(tag_x1, tag_y1), (tag_x2, tag_y2)], radius=6, fill=(accent_color[0], accent_color[1], accent_color[2], 38), outline=(accent_color[0], accent_color[1], accent_color[2], 120), width=1)
-        draw.text((tag_x1 + 13, tag_y1 + 5), c_tag, fill=accent_text, font=f_tag)
+        draw.rounded_rectangle([(tag_x1, tag_y1), (tag_x2, tag_y2)], radius=6, fill=accent_color)
+        draw.text((tag_x1 + 13, tag_y1 + 5), c_tag, fill=box_text_black, font=f_tag)
 
     # Save outputs
     out1 = os.path.join("/home/didar-lahiry/Antigravity/Target Portfolio 2/demos", filename)
@@ -177,7 +171,7 @@ make_perfect_poster(
     filename="kishan-poster.webp",
     app_name="Kishan Dashboard",
     url_bar="kishan.agro.bd/live-market",
-    accent_color=(143, 211, 193), # Soft Mint / Sage (portfolio's --d-teal)
+    accent_color=(143, 211, 193), # Soft Mint / Sage
     hero_tag="National Agriculture Telemetry",
     hero_title=("Kishan AI Platform", "(কৃষাণ)"),
     hero_desc="Live DAM Market Price Intelligence, 7-Day Weather Forecasting & Bengali Voice Assistant",
@@ -202,7 +196,7 @@ make_perfect_poster(
     filename="letter-portfolio-poster.webp",
     app_name="Letter Desktop",
     url_bar="portfolio.didarlahiry.com/desk",
-    accent_color=(255, 158, 187), # Soft Pastel Pink (portfolio's signature --screen)
+    accent_color=(255, 158, 187), # Soft Pastel Pink
     hero_tag="Tactile Web Experience",
     hero_title=("Letter Portfolio Experience", ""),
     hero_desc="Interactive Envelope Metaphor, Tactile Stationery & 3D Desk Experience in Next.js",
@@ -227,7 +221,7 @@ make_perfect_poster(
     filename="sales-bot-poster.webp",
     app_name="Sales Concierge",
     url_bar="agent.sales.telegram/console",
-    accent_color=(240, 163, 94), # Soft Dusk Amber (portfolio's --d-amber)
+    accent_color=(240, 163, 94), # Soft Dusk Amber
     hero_tag="Autonomous Telegram Concierge",
     hero_title=("E-Commerce AI Sales Agent", ""),
     hero_desc="Autonomous Telegram Sales Representative with Product Advice & 24/7 Checkout",
