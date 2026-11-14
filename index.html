@@ -880,22 +880,33 @@
 <script>
   (() => {
     function updateProjectCount() {
-      const cases = document.querySelectorAll('.tiles .tile:not(.term)');
+      // Automatically count distinct projects from the project tabs or case windows
+      const navProjects = document.querySelectorAll('nav.ws button[data-p]:not([data-p=""]):not([data-p="videos"]):not(#ws-video-btn)');
+      const caseProjects = document.querySelectorAll('article.case:not(#case-videos)');
+      const totalCount = navProjects.length || caseProjects.length || 6;
+
       const countEl = document.getElementById('ws-proj-count');
-      if (countEl && cases.length > 0) {
-        countEl.textContent = cases.length;
+      if (countEl) {
+        countEl.textContent = totalCount;
       }
     }
+
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', updateProjectCount);
     } else {
       updateProjectCount();
     }
-    // Also observe tiles container so if user adds/removes projects dynamically, count updates!
+
+    // Automatically observe both nav.ws and projects container for any added/removed projects
     window.addEventListener('load', () => {
-      const tilesContainer = document.querySelector('.tiles');
-      if (tilesContainer) {
-        new MutationObserver(updateProjectCount).observe(tilesContainer, { childList: true });
+      updateProjectCount();
+      const wsNav = document.querySelector('nav.ws');
+      if (wsNav) {
+        new MutationObserver(updateProjectCount).observe(wsNav, { childList: true, subtree: true });
+      }
+      const projectsSec = document.querySelector('#projects');
+      if (projectsSec) {
+        new MutationObserver(updateProjectCount).observe(projectsSec, { childList: true });
       }
     });
   })();
