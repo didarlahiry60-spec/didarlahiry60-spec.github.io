@@ -45,410 +45,181 @@
       }
     }
 
-    // Live Knowledge Extractor: dynamically synchronizes with current DOM projects, education, and credentials
-    function getLiveKnowledge() {
-      const projects = [];
-      try {
-        const caseEls = document.querySelectorAll('.surface.desk article.case');
-        caseEls.forEach((el, idx) => {
-          const isVideo = el.id === 'case-videos';
-          const title = el.querySelector('h3')?.textContent?.trim() || el.querySelector('.win.app .t b')?.textContent?.trim() || ('Project ' + (idx + 1));
-          const tagline = el.querySelector('.tagline')?.textContent?.trim() || '';
-          const deps = el.querySelector('.deps')?.textContent?.trim() || '';
-          const ghLink = el.querySelector('.gh a')?.getAttribute('href') || '';
-          const desc = el.querySelector('.readme p:not(.cmd)')?.textContent?.trim() || '';
-          const highlights = Array.from(el.querySelectorAll('.readme ul li')).map(li => li.textContent.trim());
-          projects.push({
-            id: el.id,
-            pId: el.id.replace('case-', ''),
-            isVideo: isVideo,
-            title: title,
-            tagline: tagline,
-            deps: deps,
-            ghLink: ghLink,
-            desc: desc,
-            highlights: highlights
-          });
-        });
-      } catch(e) {}
-      return { projects };
-    }
-
-    // High-Intelligence Conversational AI Engine
+    // Local Conversational AI Engine
     function generateLocalAIResponse(q, history) {
       const ql = q.toLowerCase().trim();
-      const knowledge = getLiveKnowledge();
 
       // Broad Banglish & Bengali language detector
       const banglishWords = /\b(kibhabe|kivabe|jogajog|jogayog|kemon|acho|aso|asen|asos|obostha|khobor|bari|koi|kothay|thake|thako|porashona|porashuna|pore|shob|ashe|bolte|chai|krbo|korbo|parba|paro|ache|tumi|apni|amar|or|tar|sthe|shathe|sathe|kotha|barta|mama|valo|bhalo|dekhi|shonao|akto|ektu|bolen|bolo|kontuct|contruct|dite|nibo|neo|taka|dam|koto|boyos|janan|bolben|korso|banalso|ase|koro|koris|korche|sahajjo|shartho|cha|coffee|biye|khabar|tomar|tor|apnar|ke|ki|konta|kare|kiser|somporke)\b/i;
       const isBn = /[\u0980-\u09FF]/.test(q) || banglishWords.test(ql);
 
-      // 1. CAPABILITIES, SERVICES & VISION (দিদার কি কি করতে পারে / কি কি করতে চান / কি কাজ করেন / লক্ষ্য কি)
-      const capRegex = /(capabilities|services?|goals?|aims?|offerings?|what\s*(can|does|are|is)\s*(didar|he|you)|কি\s*কি\s*কাজ|কি\s*কাজ\s*করে|কি\s*করতে\s*চান|কি\s*করতে\s*পারে|কি\s*কি\s*বানাতে|কি\s*বানাতে|কিভাবে\s*সাহায্য|লক্ষ্য|উদ্দেশ্য|কী\s*কী\s*করে|কী\s*করতে\s*চান|কী\s*করতে\s*পারে|সেবা|সার্ভিস)/i;
-      const isCapExplicit = /(কী\s*কী|কি\s*কি|কী|কি|what)\s*(কাজ|কাজকর্ম|করতে|বানাতে|বিল্ড|build|করার|সেবা|সার্ভিস|service|offer)?\s*(করতে|বানাতে|হতে|দেয়|দেন|পারে|পারেন|পারো|চান|চাই|করেন|করবে|করবেন|লক্ষ্য|উদ্দেশ্য|vision|goal|can\s*do|can\s*build|capabilities|services|offerings)/i.test(ql);
-
-      if (capRegex.test(ql) || isCapExplicit) {
-        return isBn
-          ? "🌟 দিদার লাহিড়ী যা যা করতে পারেন এবং তার প্রধান দক্ষতা ও সেবা:
-
-" +
-            "১. 🤖 AI Automation & Multi-Agent Systems: অটোনোমাস মাল্টি-টার্ন এজেন্ট পাইপলাইন, Google Gemini AI ইন্টিগ্রেশন, রিয়েল-টাইম ফেসবুক অটোপাইলট ও 24/7 টেলিগ্রাম সেলস বট।
-" +
-            "২. 💻 Full-Stack Web Development: আধুনিক, দ্রুত ও স্কেলেবল ওয়েব অ্যাপ্লিকেশন (React, Next.js, Node.js, Astro, Tailwind CSS, REST APIs)।
-" +
-            "৩. 📱 Mobile App Development: ক্রস-প্ল্যাটফর্ম হাই-পারফরম্যান্স মোবাইল অ্যাপ (Flutter & Dart, অফলাইন-ফার্স্ট ক্যাশ ও ফাস্ট ব্যাকএন্ড)।
-" +
-            "৪. 🕶️ 3D Web & Interactive Graphics: Three.js এবং WebGL দিয়ে ইন্টারঅ্যাক্টিভ ও নজরকাড়া 3D ওয়েব ও মোশন অ্যানিমেশন।
-" +
-            "৫. 🔍 Reverse Engineering & Security (REA): অ্যান্ড্রয়েড APK/DEX রিভার্সিং, বাইনারি অ্যানালাইসিস এবং সিকিউরিটি ফরেনসিক্স।
-" +
-            "৬. 🎬 Video Production & Motion Design: কমার্শিয়াল ও সোশ্যাল মিডিয়া হাই-ইমপ্যাক্ট প্রমোশনাল ভিডিও নির্মাণ ও সাউন্ড ডিজাইন।
-
-" +
-            "🎯 দিদারের লক্ষ্য ও উদ্দেশ্য:
-জটিল ব্যবসায়িক কাজগুলোকে স্বয়ংক্রিয় এআই সিস্টেমের মাধ্যমে সহজ ও লাভজনক করা। আপনি যেকোনো নতুন আইডিয়া বা প্রজেক্ট বাস্তবায়নে দিদারকে সরাসরি হায়ার করতে পারেন!"
-          : "🌟 Didar Lahiry's Core Capabilities & Services:
-
-" +
-            "1. 🤖 AI Automation & Multi-Agent Workflows: Autonomous multi-turn AI systems, Google Gemini integration, 24/7 sales bots, and social media autopilots.
-" +
-            "2. 💻 Full-Stack Web Applications: Fast, scalable, and responsive web platforms built with React, Next.js, Node.js, Astro, and Python FastAPI.
-" +
-            "3. 📱 Mobile App Development: High-performance cross-platform Android & iOS apps using Flutter & Dart with offline-first SQLite synchronization.
-" +
-            "4. 🕶️ 3D Web & Immersive UIs: Interactive Three.js/WebGL 3D experiences, physics-driven animations, and kinetic typography.
-" +
-            "5. 🔍 Reverse Engineering (REA): Binary analysis, APK/DEX decompilation, Frida dynamic instrumentation, and protocol inspection.
-" +
-            "6. 🎬 Video Production & Motion Graphics: High-converting commercial video ads, vertical social media formats, and dynamic motion design.
-
-" +
-            "🎯 Didar's Vision:
-To build purposeful, autonomous, and high-impact digital products that scale. You can hire Didar for bespoke software and AI automation projects!";
-      }
-
-      // 2. CONTACT / HIRE / CONNECT
+      // 1. Contact / Hire / Connect (Comprehensive Banglish, Typos, Bengali, English)
       if (/(contact|contruct|kontact|kontuct|connect|reach|hire|email|mail|phone|whatsapp|number|call|message|msg|meeting|যোগাযোগ|ইমেইল|ফোন|হোয়াটসঅ্যাপ|হোয়াটসঅ্যাপ|নাম্বার|নম্বর|কথা\s*বল|মেসেজ|হায়ার|হায়ার|কাজ\s*দিতে|কাজ\s*করাতে|jogajog|jogayog|kotha\s*bol|sthe\s*contruct|sathe\s*contruct|or\s*sthe|tar\s*sathe|hire\s*k|kaj\s*dite|pabo|call\s*dibo|mail\s*krbo)/i.test(ql)) {
         return isBn
-          ? "দিদারের সাথে সরাসরি যোগাযোগ করার মাধ্যমসমূহ:
-📧 ইমেইল: itsdidar2005@gmail.com
-💬 হোয়াটসঅ্যাপ: +880 1631-188500 (https://wa.me/8801631188500)
-📱 এছাড়াও ডেস্কে রাখা স্মার্টফোনে ক্লিক করে সরাসরি মেসেজ পাঠাতে পারেন অথবা সিভি (CV) ডাউনলোড করতে পারেন!"
-          : "You can connect with Didar directly via:
-📧 Email: itsdidar2005@gmail.com
-💬 WhatsApp: +880 1631-188500 (https://wa.me/8801631188500)
-📱 Or tap the phone on the desk to send a direct message or download his CV!";
+          ? "দিদারের সাথে সরাসরি যোগাযোগ করার মাধ্যমসমূহ:\n📧 ইমেইল: itsdidar2005@gmail.com\n💬 হোয়াটসঅ্যাপ: +880 1631-188500 (https://wa.me/8801631188500)\n📱 এছাড়াও ডেস্কে রাখা স্মার্টফোনে ক্লিক করে সরাসরি মেসেজ পাঠাতে পারেন অথবা সিভি (CV) ডাউনলোড করতে পারেন!"
+          : "You can connect with Didar directly via:\n📧 Email: itsdidar2005@gmail.com\n💬 WhatsApp: +880 1631-188500 (https://wa.me/8801631188500)\n📱 Or tap the phone on the desk to send a direct message or download his CV!";
       }
 
-      // 3. SPECIFIC PROJECT LOOKUPS
-      if (/(kishan|krishan|কৃষাণ|কৃষান|chash|krishi|কৃষি|dam\s*market|weather|আবহাওয়া|কৃষক)/i.test(ql)) {
-        return isBn
-          ? "🌾 কৃষাণ (Kishan AI Platform):
-বাংলাদেশের কৃষকদের জন্য জাতীয় এগ্রো-ইন্টেলিজেন্স সিস্টেম।
-• DAM (কৃষি বিপণন অধিদপ্তর) থেকে প্রতিদিনের পাইকারি ও খুচরা বাজারদর ট্র্যাক করে।
-• Open-Meteo দিয়ে ৭ দিনের হাইপার-লোকাল আবহাওয়ার পূর্বাভাস ও ফসলের পরামর্শ দেয়।
-• সম্পূর্ণ বাংলায় টেক্সট-টু-স্পিচ (TTS) ভয়েস ফিচার ও অফলাইন ক্যাশিং।
-• স্ট্যাক: Flutter, Dart, Python FastAPI, Gemini API, SQLite।
-
-মনিটরের Kishan ট্যাবে ক্লিক করে লাইভ ডিটেইলস দেখুন!"
-          : "🌾 Kishan (কৃষাণ) AI Platform:
-National agricultural intelligence for farmers across Bangladesh.
-• Tracks live DAM wholesale vs retail produce market rates with trend indicators.
-• Hyper-local 7-day crop advisory and weather forecasts via Open-Meteo.
-• Bengali Text-to-Speech (TTS) voice accessibility and offline SQLite cache.
-• Stack: Flutter, Dart, Python FastAPI, Gemini API, SQLite.
-
-Check the monitor's Kishan tab to explore!";
-      }
-
-      if (/(letter|লেটার|envelope|খাম|stationery|চিঠি)/i.test(ql)) {
-        return isBn
-          ? "✉️ Letter Portfolio Experience:
-একটি ফিজিক্যাল এনভেলপ ও লেটার ডেস্ক মেটাফোর ওয়েব অ্যাপ।
-• স্ক্রিনে চিঠি খোলা, ফিজিক্যাল ডকুমেন্টস ও নস্টালজিক ডেকোরেশন।
-• থ্রিডি টিল্ট ও ফ্লুইড ট্রানজিশন ফিজিক্স।
-• স্ট্যাক: Next.js, React, Tailwind CSS, Framer Motion।
-
-মনিটরের Letter Portfolio ট্যাবে ক্লিক করে উপভোগ করুন!"
-          : "✉️ Letter Portfolio Experience:
-Tactile physical stationery & envelope desk experience.
-• Physical paper letters, pull-out project files, and nostalgic desk interactions.
-• Fluid 3D tilt and spring physics.
-• Stack: Next.js, React, Tailwind CSS, Framer Motion.
-
-Explore it under the Letter Portfolio tab on the monitor!";
-      }
-
-      if (/(sales|sales\s*bot|telegram|টেলিগ্রাম|বট|দোকান|ecommerce|e-commerce)/i.test(ql) && !/(facebook|fb)/i.test(ql)) {
-        return isBn
-          ? "🛍️ E-Commerce AI Sales Agent:
-স্বয়ংক্রিয় ২৪/৭ টেলিগ্রাম সেলস রিপ্রেজেন্টেটিভ ও কাস্টমার সাপোর্ট বট।
-• বাংলা ও ইংরেজিতে স্বাভাবিকভাবে প্রোডাক্টের বিবরণ দেয় ও দাম নিয়ে দরদাম সামলায়।
-• Gemini AI ও SQLite ডাটাবেজ দিয়ে কনটেক্সট-সচেতন শপিং এবং অটোমেটেড চেকআউট।
-• স্ট্যাক: Python, Google Gemini API, python-telegram-bot, SQLite, AsyncIO।"
-          : "🛍️ E-Commerce AI Sales Agent:
-An intelligent Telegram sales representative and customer support agent.
-• Natural conversational sales negotiations in Bengali and English.
-• Multi-turn context-aware recommendations via Gemini AI and automated SQLite checkout.
-• Stack: Python, Google Gemini API, python-telegram-bot, SQLite, AsyncIO.";
-      }
-
-      if (/(facebook|ফেসবুক|fb\s*auto|fb\s*automation|সোশ্যাল\s*মিডিয়া|social\s*media|অটোমেশন)/i.test(ql) && !/(kishan|letter|sales)/i.test(ql)) {
-        return isBn
-          ? "📱 Facebook 24/7 AI Automation System:
-ক্লাউড-রেডি সোশ্যাল মিডিয়া অটোমেশন অটোপাইলট।
-• দিনে ৩ বার (সকাল ১০:০০, দুপুর ২:৩০, রাত ৮:৩০) প্রযুক্তি বিষয়ক AI পোস্ট পাবলিশ করে।
-• Python Pillow দিয়ে ব্র্যান্ডেড গ্রাফিক ব্যানার ইমেজ স্বয়ংক্রিয়ভাবে জেনারেট করে।
-• কমেন্টের তাৎক্ষণিক বাংলা রিপ্লাই এবং মেসেঞ্জারে ২৪/৭ কাস্টমার সাপোর্ট দেয়।
-• স্ট্যাক: Python, Facebook Graph API, Gemini API, Pillow, Flask, APScheduler।"
-          : "📱 Facebook 24/7 AI Automation System:
-Cloud-ready social media autopilot system.
-• Curates and publishes tech posts 3x daily (10:00 AM, 2:30 PM, 8:30 PM BST).
-• Generates branded graphic banners automatically using Python Pillow.
-• Instant real-time Bengali comment replies and 24/7 Messenger chatbot.
-• Stack: Python, Facebook Graph API, Gemini API, Pillow, APScheduler, Flask.";
-      }
-
-      if (/(kawaii|portfolio-?1|neobrutal|didar-portfolio-1)/i.test(ql)) {
-        return isBn
-          ? "✨ দিদারস পোর্টফোলিও ১ (Kawaii Neobrutalist Portfolio):
-একটি ইন্টারেক্টিভ নিওব্রুটালিস্ট ও কাওয়াই রেট্রো ওয়েব পোর্টফোলিও।
-• বোল্ড ফ্রন্টএন্ড ডিজাইন, প্যাস্টেল কালার প্যালেট ও ফ্রেন্ডলি মাইক্রো-ইন্টারঅ্যাকশন।
-• লাইভ ক্যাটাগরি ফিল্টারিং ও ক্যানভাস কনফেটি ইফেক্টস।
-• স্ট্যাক: HTML5, Tailwind CSS, JavaScript, Font Awesome।
-
-মনিটরের Kawaii Portfolio ট্যাবে ক্লিক করে অথবা সরাসরি https://didarlahiry60-spec.github.io/didar-portfolio-1/ লিংকে ভিজিট করতে পারেন!"
-          : "✨ Didar's Portfolio 1 (Kawaii Neobrutalist):
-An interactive retro Kawaii Neobrutalist web experience.
-• High-contrast borders, playful typography, and warm pastel aesthetics.
-• Real-time project category filters and confetti micro-interactions.
-• Stack: HTML5, Tailwind CSS, JavaScript.
-
-Visit https://didarlahiry60-spec.github.io/didar-portfolio-1/ or click the Kawaii Portfolio tab on the monitor!";
-      }
-
-      if (/(editorial|portfolio-?0|motion-?portfolio|didar-portfolio(?!\-1)|phoenix|prodesk)/i.test(ql)) {
-        return isBn
-          ? "🖤 দিদারস পোর্টফোলিও (Editorial Motion Portfolio):
-একটি সিনেম্যাটিক ডার্ক এডিটোরিয়াল ও মোশন-ফার্স্ট ওয়েব পোর্টফোলিও।
-• বোল্ড কাইনেটিক টাইপোগ্রাফি (Big Shoulders Display), স্মুথ ইন্টারঅ্যাকশন ও ফিনিক্স ৩.০ শোকেস।
-• হাই-পারফরম্যান্স ভ্যানিলা আর্কিটেকচার ও ফ্লুইড মোশন সিস্টেম।
-• স্ট্যাক: HTML5, CSS3 Custom Properties, JavaScript ES6+, Web Animations API।
-
-মনিটরের Editorial Motion ট্যাবে ক্লিক করে অথবা সরাসরি https://didarlahiry60-spec.github.io/didar-portfolio/ লিংকে ভিজিট করতে পারেন!"
-          : "🖤 Didar's Editorial Motion Portfolio:
-A cinematic dark editorial web experience driven by typography and fluid motion.
-• High-contrast editorial layout, bespoke typography (Big Shoulders Display), and Phoenix 3.0 architecture.
-• Kinetic micro-interactions and zero-dependency smooth performance.
-• Stack: HTML5, CSS3, ES6+ JavaScript, Web Animations API.
-
-Visit https://didarlahiry60-spec.github.io/didar-portfolio/ or click the Editorial Motion tab on the monitor!";
-      }
-
-      if (/(video|ভিডিও|ad|বিজ্ঞাপন|sunnah|সুন্নাহ)/i.test(ql)) {
-        return isBn
-          ? "🎬 আস-সুন্নাহ স্কিল ডেভেলপমেন্ট অ্যাড (Video Showcase):
-আস-সুন্নাহ ফাউন্ডেশনের স্কিল ডেভেলপমেন্ট কর্মসূচির জন্য নির্মিত একটি প্রমোশনাল কমার্শিয়াল ভিডিও (২ মিনিট)।
-• হাই-রেজোলিউশন সোশ্যাল অপ্টিমাইজড 9:16 ভার্টিক্যাল ভিডিও প্রোডাকশন।
-• প্রফেশনাল মোশন গ্রাফিক্স, টাইপোগ্রাফিক হুক ও সাউন্ড ডিজাইন।
-
-মনিটরের 'Videos' ট্যাবে ক্লিক করে ভিডিওটি সরাসরি প্লে করতে পারেন!"
-          : "🎬 As-Sunnah Skill Development Ad (Video Showcase):
-A commercial promotional video produced for As-Sunnah Foundation's skill development initiative.
-• 1080p HD vertical social media ad production.
-• Dynamic motion graphics, typographic pacing, and sound design.
-
-Click the 'Videos' tab on the monitor to watch it run!";
-      }
-
-      // Check any dynamically added project by title or id
-      if (knowledge.projects && knowledge.projects.length > 0) {
-        for (const p of knowledge.projects) {
-          const tClean = p.title.toLowerCase();
-          if (tClean.length > 3 && ql.includes(tClean)) {
-            return isBn
-              ? ('🚀 ' + p.title + ':
-' + p.tagline + '
-
-• বিবরণ: ' + (p.desc || p.highlights.slice(0, 2).join(' ')) + '
-• টেক স্ট্যাক: ' + p.deps + '
-
-মনিটরের '' + p.title + '' ট্যাবে ক্লিক করে আরও দেখুন!')
-              : ('🚀 ' + p.title + ':
-' + p.tagline + '
-
-• Details: ' + (p.desc || p.highlights.slice(0, 2).join(' ')) + '
-• Tech: ' + p.deps + '
-
-Check the monitor's '' + p.title + '' tab to explore!');
-          }
-        }
-      }
-
-      // 4. ALL PROJECTS DYNAMIC OVERVIEW (Auto-synced from live DOM)
-      if (/(project|প্রজেক্ট|portfolio|পোর্টফোলিও|কাজ|বিল্ড|build|ki\s*ki\s*kaj|kaj\s*ki|ki\s*project|প্রজেক্টগুলো|কাজগুলো|সবগুলো\s*প্রজেক্ট)/i.test(ql)) {
-        const softwareProjs = knowledge.projects.filter(p => !p.isVideo);
-        const videoProj = knowledge.projects.find(p => p.isVideo);
-        const count = softwareProjs.length;
-
-        if (count === 0 && !videoProj) {
-          return isBn
-            ? "বর্তমানে মনিটরে কোনো প্রজেক্ট প্রদর্শিত নেই।"
-            : "There are currently no projects displayed on the monitor.";
-        }
-
-        const icons = ['🌾', '✉️', '🛍️', '📱', '✨', '🖤', '🚀', '⚡', '💡', '💎'];
-        let out = isBn
-          ? ('দিদারের বর্তমান পোর্টফোলিওতে মোট ' + count + 'টি সফটওয়্যার প্রজেক্ট এবং ' + (videoProj ? '১টি ভিডিও শোকেস' : '') + ' মনিটরে সাজানো আছে:
-
-')
-          : ('Didar currently has ' + count + ' software projects and ' + (videoProj ? '1 video showcase' : '') + ' on the monitor:
-
-');
-
-        softwareProjs.forEach((p, idx) => {
-          const icon = icons[idx % icons.length];
-          out += (idx + 1) + '. ' + icon + ' ' + p.title + ' — ' + p.tagline + '
-';
-        });
-
-        if (videoProj) {
-          out += (count + 1) + '. 🎬 ' + videoProj.title + ' — ' + videoProj.tagline + '
-';
-        }
-
-        out += isBn
-          ? "
-মনিটরের যেকোনো প্রজেক্ট বা Videos বাটনে ক্লিক করে কোড, লাইভ ডেমো ও ভিডিও দেখতে পারেন!"
-          : "
-Click any project or Videos tab on the monitor to explore code and live demos!";
-        return out;
-      }
-
-      // 5. IDENTITY & WHO IS DIDAR
-      if (/(who|identity|about\s*didar|tell\s*me\s*about|তুমি\s*কে|কে\s*তুমি|দিদার\s*কে|নাম\s*কি|পরিচয়|tumi\s*ke|apni\s*ke|didar\s*ke|didar\s*k|parichoy|somporke|kar\s*portfolio)/i.test(ql)) {
-        return isBn
-          ? "আমি দিদার লাহিড়ীর এআই রোবট অ্যাসিস্ট্যান্ট! আর দিদার লাহিড়ী হলেন ঢাকা, বাংলাদেশের একজন AI অটোমেশন স্পেশালিস্ট, ফুল-স্ট্যাক ওয়েব ও অ্যাপ ডেভেলপার এবং রিভার্স ইঞ্জিনিয়ার।
-তিনি জটিল AI অটোমেশন, অটোনোমাস এজেন্ট, আধুনিক 3D ওয়েব এবং সিকিউর সিস্টেমস তৈরি করেন। ডেস্কে তাকিয়ে তার কাজের পুরো পরিবেশ দেখতে পারেন!"
-          : "I'm Didar Lahiry's 24/7 AI assistant! Didar is an AI Automation Specialist, Full-Stack Web & App Developer, and Reverse Engineer based in Dhaka, Bangladesh. He builds intelligent multi-agent systems, cross-platform apps, and interactive 3D web experiences.";
-      }
-
-      // 6. SKILLS & TECHNOLOGIES
-      if (/(skill|স্কিল|দক্ষতা|স্ট্যাক|stack|tech|টেক|কী\s*কী\s*পারো|কী\s*পারো|পারো|python|flutter|react|three\.?js|ai\s*agent|fastapi|node|javascript|typescript|ki\s*ki\s*paro|ki\s*paro|ki\s*jano)/i.test(ql)) {
-        return isBn
-          ? "দিদারের প্রধান টেকনিক্যাল দক্ষতাসমূহ:
-• AI & Agents: Autonomous AI Agents, Google Gemini API, LangChain, Multi-Agent Orchestration, Phoenix 3.0।
-• Web Development: JavaScript/TypeScript, React, Next.js, Astro, Three.js (3D WebGL), Node.js, Tailwind CSS।
-• App Development: Flutter, Dart, Python (FastAPI/Flask), SQLite, Offline-first sync।
-• Reverse Engineering (REA): Frida, GDB, Rizin/Cutter, Ghidra, Android APK/DEX অ্যানালাইসিস।"
-          : "Didar's core technical expertise spans:
-• AI & Automation: Autonomous AI Agents, Google Gemini API, Multi-Agent Orchestration, LangChain, Voice Orchestrator.
-• Full-Stack & 3D Web: JavaScript/TypeScript, React, Next.js, Astro, Three.js/WebGL, Node.js, Tailwind CSS.
-• Mobile & App Dev: Flutter, Dart, Python (FastAPI/Flask), SQLite, REST/GraphQL.
-• Reverse Engineering (REA): Binary analysis, Frida, GDB, Rizin/Cutter, Ghidra, Android APK reverse engineering.";
-      }
-
-      // 7. LOCATION / CITY
+      // 2. Location / Living
       if (/(location|address|where|live|living|city|country|কোথায়\s*থাকো|বাসা|বাড়ি|কোথাকার|দেশ|ঢাকা|kothay\s*thak|bari\s*k|basha\s*k|desh\s*k|dhaka)/i.test(ql)) {
         return isBn
           ? "দিদার ঢাকা, বাংলাদেশে (Dhaka, Bangladesh) থাকেন। তিনি দেশি ও আন্তর্জাতিক ক্লায়েন্ট এবং টিমদের সাথে রিমোটলি কাজ করেন।"
           : "Didar lives in Dhaka, Bangladesh. He works remotely with clients and tech teams worldwide.";
       }
 
-      // 8. EDUCATION
+      // 3. Specific Project: Kishan
+      if (/(kishan|krishan|কৃষাণ|কৃষান|chash|krishi|কৃষি|dam\s*market|weather|আবহাওয়া|কৃষক)/i.test(ql)) {
+        return isBn
+          ? "🌾 কৃষাণ (Kishan AI Platform):\nবাংলাদেশের কৃষকদের জন্য জাতীয় এগ্রো-ইন্টেলিজেন্স সিস্টেম।\n• DAM (কৃষি বিপণন অধিদপ্তর) থেকে প্রতিদিনের পাইকারি ও খুচরা বাজারদর ট্র্যাক করে।\n• Open-Meteo দিয়ে ৭ দিনের হাইপার-লোকাল আবহাওয়ার পূর্বাভাস ও ফসলের পরামর্শ দেয়।\n• সম্পূর্ণ বাংলায় টেক্সট-টু-স্পিচ (TTS) ভয়েস ফিচার ও অফলাইন ক্যাশিং।\n• স্ট্যাক: Flutter, Dart, Python FastAPI, Gemini API, SQLite।\n\nমনিটরের Kishan ট্যাবে ক্লিক করে লাইভ ডিটেইলস দেখুন!"
+          : "🌾 Kishan (কৃষাণ) AI Platform:\nNational agricultural intelligence for farmers across Bangladesh.\n• Tracks live DAM wholesale vs retail produce market rates with trend indicators.\n• Hyper-local 7-day crop advisory and weather forecasts via Open-Meteo.\n• Bengali Text-to-Speech (TTS) voice accessibility and offline SQLite cache.\n• Stack: Flutter, Dart, Python FastAPI, Gemini API, SQLite.\n\nCheck the monitor's Kishan tab to explore!";
+      }
+
+      // 4. Specific Project: Letter Portfolio
+      if (/(letter|লেটার|envelope|খাম|stationery|চিঠি)/i.test(ql)) {
+        return isBn
+          ? "✉️ Letter Portfolio Experience:\nএকটি ফিজিক্যাল এনভেলপ ও লেটার ডেস্ক মেটাফোর ওয়েব অ্যাপ্লিকেশন।\n• বাস্তব চিঠির খাম খোলার অভিজ্ঞতা এবং ইন্টারেক্টিভ প্রজেক্ট ফোল্ডার।\n• মাউসের নড়াচড়া অনুযায়ী 3D টিল্ট পারসপেক্টিভ ও Framer Motion স্প্রিং ফিজিক্স।\n• স্ট্যাক: Next.js App Router, TypeScript, Tailwind CSS, Framer Motion।\n\nমনিটরে ক্লিক করে অথবা https://didarlahiry60-spec.github.io/letter-portfolio/ লিংকে সরাসরি দেখে আসতে পারেন!"
+          : "✉️ Letter Portfolio Experience:\nA tactile stationary & envelope desk web experience.\n• Physical envelopes that unfold smoothly with interactive project letters.\n• Dynamic 3D tilt perspective and Framer Motion spring physics.\n• Stack: Next.js App Router, TypeScript, Tailwind CSS, Framer Motion.\n\nClick the Letter Portfolio tab on the monitor or visit https://didarlahiry60-spec.github.io/letter-portfolio/!";
+      }
+
+      // 5. Specific Project: Sales Bot
+      if (/(sales|টেলিগ্রাম|সেলস|telegram|ads\s*fashion|bot|বট|দোকান|বিক্রি|কাস্টমার)/i.test(ql) && !/(fb|facebook|ফেসবুক)/i.test(ql)) {
+        return isBn
+          ? "🛍️ E-Commerce AI Sales Agent (ADS Fashion Bot):\n২৪/৭ সক্রিয় টেলিগ্রাম সেলস রিপ্রেজেন্টেটিভ ও কাস্টমার সাপোর্ট বট।\n• ক্রেতাদের সাথে স্বাভাবিক বাংলায় কথা বলে ফ্যাশন সাইজ, ফেব্রিক ও স্টক পরামর্শ দেয়।\n• Google Gemini AI দ্বারা প্রাসঙ্গিক প্রোডাক্ট রেকমেন্ড করে ও স্বয়ংক্রিয়ভাবে অর্ডার কনফার্ম করে।\n• স্ট্যাক: Python, Google Gemini API, python-telegram-bot, SQLite, AsyncIO।\n\nমনিটরে AI Sales Agent ট্যাবে এর বিস্তারিত ডেমো আছে!"
+          : "🛍️ E-Commerce AI Sales Agent:\n24/7 intelligent Telegram sales representative and customer support agent.\n• Natural conversational sales negotiations in Bengali and English.\n• Multi-turn context-aware recommendations via Gemini AI and automated SQLite checkout.\n• Stack: Python, Google Gemini API, python-telegram-bot, SQLite, AsyncIO.";
+      }
+
+      // 6. Specific Project: Facebook Automation
+      if (/(facebook|ফেসবুক|fb\s*auto|fb\s*automation|সোশ্যাল\s*মিডিয়া|social\s*media|অটোমেশন)/i.test(ql) && !/(kishan|letter|sales)/i.test(ql)) {
+        return isBn
+          ? "📱 Facebook 24/7 AI Automation System:\nক্লাউড-রেডি সোশ্যাল মিডিয়া অটোমেশন অটোপাইলট।\n• দিনে ৩ বার (সকাল ১০:০০, দুপুর ২:৩০, রাত ৮:৩০) প্রযুক্তি বিষয়ক AI পোস্ট পাবলিশ করে।\n• Python Pillow দিয়ে ব্র্যান্ডেড গ্রাফিক ব্যানার ইমেজ স্বয়ংক্রিয়ভাবে জেনারেট করে।\n• কমেন্টের তাৎক্ষণিক বাংলা রিপ্লাই এবং মেসেঞ্জারে ২৪/৭ কাস্টমার সাপোর্ট দেয়।\n• স্ট্যাক: Python, Facebook Graph API, Gemini API, Pillow, Flask, APScheduler।"
+          : "📱 Facebook 24/7 AI Automation System:\nCloud-ready social media autopilot system.\n• Curates and publishes tech posts 3x daily (10:00 AM, 2:30 PM, 8:30 PM BST).\n• Generates branded graphic banners automatically using Python Pillow.\n• Instant real-time Bengali comment replies and 24/7 Messenger chatbot.\n• Stack: Python, Facebook Graph API, Gemini API, Pillow, APScheduler, Flask.";
+      }
+
+      // 7. Specific Project: Kawaii Portfolio
+      if (/(kawaii|portfolio-?1|neobrutal|didar-portfolio-1)/i.test(ql)) {
+        return isBn
+          ? "✨ দিদারস পোর্টফোলিও ১ (Kawaii Neobrutalist Portfolio):\nএকটি ইন্টারেক্টিভ নিওব্রুটালিস্ট ও কাওয়াই রেট্রো ওয়েব পোর্টফোলিও।\n• বোল্ড ফ্রন্টএন্ড ডিজাইন, প্যাস্টেল কালার প্যালেট ও ফ্রেন্ডলি মাইক্রো-ইন্টারঅ্যাকশন।\n• লাইভ ক্যাটাগরি ফিল্টারিং ও ক্যানভাস কনফেটি ইফেক্টস।\n• স্ট্যাক: HTML5, Tailwind CSS, JavaScript, Font Awesome।\n\nমনিটরের Kawaii Portfolio ট্যাবে ক্লিক করে অথবা সরাসরি https://didarlahiry60-spec.github.io/didar-portfolio-1/ লিংকে ভিজিট করতে পারেন!"
+          : "✨ Didar's Portfolio 1 (Kawaii Neobrutalist):\nAn interactive retro Kawaii Neobrutalist web experience.\n• High-contrast borders, playful typography, and warm pastel aesthetics.\n• Real-time project category filters and confetti micro-interactions.\n• Stack: HTML5, Tailwind CSS, JavaScript.\n\nVisit https://didarlahiry60-spec.github.io/didar-portfolio-1/ or click the Kawaii Portfolio tab on the monitor!";
+      }
+
+      // Video Showcase
+      if (/(video|ভিডিও|ad|বিজ্ঞাপন|sunnah|সুন্নাহ)/i.test(ql)) {
+        return isBn
+          ? "🎬 আস-সুন্নাহ স্কিল ডেভেলপমেন্ট অ্যাড (Video Showcase):\nআস-সুন্নাহ ফাউন্ডেশনের স্কিল ডেভেলপমেন্ট কর্মসূচির জন্য নির্মিত একটি প্রমোশনাল কমার্শিয়াল ভিডিও (২ মিনিট)।\n• হাই-রেজোলিউশন সোশ্যাল অপ্টিমাইজড 9:16 ভার্টিক্যাল ভিডিও প্রোডাকশন।\n• প্রফেশনাল মোশন গ্রাফিক্স, টাইপোগ্রাফিক হুক ও সাউন্ড ডিজাইন।\n\nমনিটরের 'Videos' ট্যাবে ক্লিক করে ভিডিওটি সরাসরি প্লে করতে পারেন!"
+          : "🎬 As-Sunnah Skill Development Ad (Video Showcase):\nA commercial promotional video produced for As-Sunnah Foundation's skill development initiative.\n• 1080p HD vertical social media ad production.\n• Dynamic motion graphics, typographic pacing, and sound design.\n\nClick the 'Videos' tab on the monitor to watch it run!";
+      }
+
+      // 8. Specific Project: Editorial Motion Portfolio
+      if (/(editorial|portfolio-?0|motion-?portfolio|didar-portfolio(?!\-1)|phoenix|prodesk)/i.test(ql)) {
+        return isBn
+          ? "🖤 দিদারস পোর্টফোলিও (Editorial Motion Portfolio):\nএকটি সিনেম্যাটিক ডার্ক এডিটোরিয়াল ও মোশন-ফার্স্ট ওয়েব পোর্টফোলিও।\n• বোল্ড কাইনেটিক টাইপোগ্রাফি (Big Shoulders Display), স্মুথ ইন্টারঅ্যাকশন ও ফিনিক্স ৩.০ শোকেস।\n• হাই-পারফরম্যান্স ভ্যানিলা আর্কিটেকচার ও ফ্লুইড মোশন সিস্টেম।\n• স্ট্যাক: HTML5, CSS3 Custom Properties, JavaScript ES6+, Web Animations API।\n\nমনিটরের Editorial Motion ট্যাবে ক্লিক করে অথবা সরাসরি https://didarlahiry60-spec.github.io/didar-portfolio/ লিংকে ভিজিট করতে পারেন!"
+          : "🖤 Didar's Editorial Motion Portfolio:\nA cinematic dark editorial web experience driven by typography and fluid motion.\n• High-contrast editorial layout, bespoke typography (Big Shoulders Display), and Phoenix 3.0 architecture.\n• Kinetic micro-interactions and zero-dependency smooth performance.\n• Stack: HTML5, CSS3, ES6+ JavaScript, Web Animations API.\n\nVisit https://didarlahiry60-spec.github.io/didar-portfolio/ or click the Editorial Motion tab on the monitor!";
+      }
+
+      // 9. All Projects Overview
+      if (/(project|প্রজেক্ট|portfolio|পোর্টফোলিও|কাজ|বিল্ড|build|ki\s*ki\s*kaj|kaj\s*ki|ki\s*project)/i.test(ql)) {
+        return isBn
+          ? "দিদারের ৬টি প্রধান সফটওয়্যার প্রজেক্ট এবং ১টি ভিডিও সেকশন মনিটরে সাজানো আছে:\n1. 🌾 কৃষাণ (Kishan AI) — এগ্রো-ইন্টেলিজেন্স প্ল্যাটফর্ম\n2. ✉️ Letter Portfolio — 3D ইন্টারেক্টিভ এনভেলপ এক্সপেরিয়েন্স\n3. 🛍️ AI Sales Agent — 24/7 টেলিগ্রাম সেলস বট\n4. 📱 FB Automation — ফেসবুক AI অটোপাইলট\n5. ✨ Kawaii Portfolio (v1) — নিওব্রুটালিস্ট রেট্রো ওয়েব পোর্টফোলিও\n6. 🖤 Editorial Motion — সিনেম্যাটিক ডার্ক মোশন পোর্টফোলিও\n7. 🎬 Videos — আস-সুন্নাহ স্কিল ডেভেলপমেন্ট কমার্শিয়াল অ্যাড\n\nমনিটরের যেকোনো প্রজেক্ট বা Videos বাটনে ক্লিক করে কোড, লাইভ ডেমো ও ভিডিও দেখতে পারেন!"
+          : "Didar has 6 featured production projects and a Video Showcase on the monitor:\n1. 🌾 Kishan AI Platform\n2. ✉️ Letter Portfolio\n3. 🛍️ AI Sales Agent\n4. 📱 FB Automation\n5. ✨ Kawaii Portfolio (v1)\n6. 🖤 Editorial Motion Portfolio\n7. 🎬 Videos (As-Sunnah Foundation Skill Dev Ad)\n\nClick any project or Videos tab on the monitor to explore!";
+      }
+
+      // 8. Identity & Who is Didar
+      if (/(who|identity|about\s*didar|tell\s*me\s*about|তুমি\s*কে|কে\s*তুমি|দিদার\s*কে|নাম\s*কি|পরিচয়|tumi\s*ke|apni\s*ke|didar\s*ke|didar\s*k|parichoy|somporke|kar\s*portfolio)/i.test(ql)) {
+        return isBn
+          ? "আমি দিদার লাহিড়ীর এআই রোবট অ্যাসিস্ট্যান্ট! আর দিদার লাহিড়ী হলেন ঢাকা, বাংলাদেশের একজন AI অটোমেশন স্পেশালিস্ট, ফুল-স্ট্যাক ওয়েব ও অ্যাপ ডেভেলপার এবং রিভার্স ইঞ্জিনিয়ার।\nতিনি জটিল AI অটোমেশন, অটোনোমাস এজেন্ট, আধুনিক 3D ওয়েব এবং সিকিউর সিস্টেমস তৈরি করেন। ডেস্কে তাকিয়ে তার কাজের পুরো পরিবেশ দেখতে পারেন!"
+          : "I'm Didar Lahiry's 24/7 AI assistant! Didar is an AI Automation Specialist, Full-Stack Web & App Developer, and Reverse Engineer based in Dhaka, Bangladesh. He builds intelligent multi-agent systems, cross-platform apps, and interactive 3D web experiences.";
+      }
+
+      // 9. Skills & Technologies
+      if (/(skill|স্কিল|দক্ষতা|স্ট্যাক|stack|tech|টেক|কী\s*কী\s*পারো|কী\s*পারো|পারো|python|flutter|react|three\.?js|ai\s*agent|fastapi|node|javascript|typescript|ki\s*ki\s*paro|ki\s*paro|ki\s*jano)/i.test(ql)) {
+        return isBn
+          ? "দিদারের প্রধান টেকনিক্যাল দক্ষতাসমূহ:\n• AI & Agents: Autonomous AI Agents, Google Gemini API, LangChain, Multi-Agent Orchestration, Phoenix 3.0।\n• Web Development: JavaScript/TypeScript, React, Next.js, Astro, Three.js (3D WebGL), Node.js, Tailwind CSS।\n• App Development: Flutter, Dart, Python (FastAPI/Flask), SQLite, Offline-first sync।\n• Reverse Engineering (REA): Frida, GDB, Rizin/Cutter, Ghidra, Android APK/DEX অ্যানালাইসিস।"
+          : "Didar's core technical expertise spans:\n• AI & Automation: Autonomous AI Agents, Google Gemini API, Multi-Agent Orchestration, LangChain, Voice Orchestrator.\n• Full-Stack & 3D Web: JavaScript/TypeScript, React, Next.js, Astro, Three.js/WebGL, Node.js, Tailwind CSS.\n• Mobile & App Dev: Flutter, Dart, Python (FastAPI/Flask), SQLite, REST/GraphQL.\n• Reverse Engineering (REA): Binary analysis, Frida, GDB, Rizin/Cutter, Ghidra, Android APK reverse engineering.";
+      }
+
+      // 10. Education
       if (/(education|পড়াশোনা|পড়াশুনা|লেখাপড়া|college|কলেজ|school|স্কুল|hsc|ssc|এইচএসসি|এসএসসি|ভার্সিটি|university|রেজাল্ট|gpa|porashona|porashuna|kothay\s*pore)/i.test(ql)) {
         return isBn
-          ? "দিদারের শিক্ষাগত যোগ্যতা:
-🎓 HSC: সরকারি শ্রীনগর কলেজ (Govt. Sreenagar College) · ব্যাচ ২০২৪ · GPA 4.58 (বিজ্ঞান বিভাগ - ম্যাথ, ফিজিক্স ও আইসিটি)
-🎓 SSC: কাজী পাগলা এ.টি. ইনস্টিটিউশন · ব্যাচ ২০২২ · GPA 4.89 (বিজ্ঞান বিভাগ)
-
-বোর্ডের পিনবোর্ডে এডুকেশন সেকশনে এর পূর্ণ বিবরণ রয়েছে!"
-          : "Didar's educational credentials:
-🎓 Higher Secondary (HSC): Govt. Sreenagar College · Batch 2024 · GPA 4.58 (Science: Math, Physics & ICT)
-🎓 Secondary (SSC): Kazir Pagla A.T. Institution · Batch 2022 · GPA 4.89 (Science)
-
-Check the Education tab on the pinboard for more details!";
+          ? "দিদারের শিক্ষাগত যোগ্যতা:\n🎓 HSC: সরকারি শ্রীনগর কলেজ (Govt. Sreenagar College) · ব্যাচ ২০২৪ · GPA 4.58 (বিজ্ঞান বিভাগ - ম্যাথ, ফিজিক্স ও আইসিটি)\n🎓 SSC: কাজী পাগলা এ.টি. ইনস্টিটিউশন · ব্যাচ ২০২২ · GPA 4.89 (বিজ্ঞান বিভাগ)\n\nবোর্ডের পিনবোর্ডে এডুকেশন সেকশনে এর পূর্ণ বিবরণ রয়েছে!"
+          : "Didar's educational credentials:\n🎓 Higher Secondary (HSC): Govt. Sreenagar College · Batch 2024 · GPA 4.58 (Science: Math, Physics & ICT)\n🎓 Secondary (SSC): Kazir Pagla A.T. Institution · Batch 2022 · GPA 4.89 (Science)\n\nCheck the Education tab on the pinboard for more details!";
       }
 
-      // 9. EXPERIENCE
+      // 11. Experience
       if (/(experience|অভিজ্ঞতা|কোথায়\s*কাজ|কাজ\s*করেছো|চাকরি|job|career|koto\s*diner\s*experience)/i.test(ql)) {
         return isBn
-          ? "দিদার ২০২৬ থেকে প্রফেশনাল হিসেবে কাজ করছেন:
-• AI Automation Specialist: অটোনোমাস মাল্টি-টার্ন এজেন্ট ও ভয়েস কন্ট্রোলড পাইপলাইন তৈরি।
-• Web & App Developer: হাই-পারফরম্যান্স 3D ওয়েবজিএল এক্সপেরিয়েন্স এবং ক্রস-প্ল্যাটফর্ম মোবাইল অ্যাপস।
-• Reverse Engineer: বাইনারি অ্যানালাইসিস, সিকিউরিটি ফরেনসিক্স ও এপিআই রিভার্স ইঞ্জিনিয়ারিং।"
-          : "Didar works across 4 professional core specializations:
-• AI Automation Specialist (2026-Present): Multi-agent architectures & autonomous LLM workflows.
-• Web & App Developer (2026-Present): High performance 3D Three.js experiences & cross-platform Flutter apps.
-• Reverse Engineer (2026-Present): Binary analysis, Frida instrumentation, and protocol inspection.";
+          ? "দিদার ২০২৬ থেকে প্রফেশনাল হিসেবে কাজ করছেন:\n• AI Automation Specialist: অটোনোমাস মাল্টি-টার্ন এজেন্ট ও ভয়েস কন্ট্রোলড পাইপলাইন তৈরি।\n• Web & App Developer: হাই-পারফরম্যান্স 3D ওয়েবজিএল এক্সপেরিয়েন্স এবং ক্রস-প্ল্যাটফর্ম মোবাইল অ্যাপস।\n• Reverse Engineer: বাইনারি অ্যানালাইসিস, সিকিউরিটি ফরেনসিক্স ও এপিআই রিভার্স ইঞ্জিনিয়ারিং।"
+          : "Didar works across 4 professional core specializations:\n• AI Automation Specialist (2026-Present): Multi-agent architectures & autonomous LLM workflows.\n• Web & App Developer (2026-Present): High performance 3D Three.js experiences & cross-platform Flutter apps.\n• Reverse Engineer (2026-Present): Binary analysis, Frida instrumentation, and protocol inspection.";
       }
 
-      // 10. RATES / PRICING / HIRE COST
+      // 12. Rates / Pricing / Hire Cost
       if (/(cost|price|pricing|charge|budget|rate|fee|দাম|টাকা|খরচ|বাজেট|কত\s*টাকা|koto\s*taka|dam\s*koto|budget\s*koto)/i.test(ql)) {
         return isBn
           ? "দিদার যেকোনো ক্লায়েন্ট প্রজেক্টের কাজের পরিধি ও ফিচারের ওপর ভিত্তি করে ক্লায়েন্ট-বান্ধব ও বাস্তবসম্মত বাজেট নির্ধারণ করেন। আপনার প্রজেক্ট আইডিয়া ও বাজেট নিয়ে সরাসরি আলোচনা করতে ইমেইলে (itsdidar2005@gmail.com) অথবা হোয়াটসঅ্যাপে (+880 1631-188500) নক দিন!"
           : "Didar offers fair, flexible pricing based on the scope and requirements of your project. To get a quote, reach out directly via email at itsdidar2005@gmail.com or on WhatsApp at +880 1631-188500!";
       }
 
-      // 11. GREETINGS
+      // 13. Greetings
       if (/(kemon|কেমন|hi|hello|হ্যালো|সালাম|salam|hey|halo|হেই|ki\s*obostha|ki\s*khobor|kire\s*mama)/i.test(ql)) {
         return isBn
           ? "হ্যালো! আমি দারুণ আছি! আমি দিদার লাহিড়ীর এআই রোবট। দিদারের প্রজেক্ট, স্কিল, পড়াশোনা, অভিজ্ঞতা বা যোগাযোগ নিয়ে যেকোনো প্রশ্ন আমাকে করতে পারেন। আপনি কেমন আছেন?"
           : "Hey there! I'm doing great! I'm Didar's AI assistant. Ask me anything about Didar's projects, tech stack, experience, or how to get in touch. How can I help you today?";
       }
 
-      // 12. CV / RESUME
+      // 14. CV / Resume
       if (/(cv|resume|রেজুমে|জীবনবৃত্তান্ত)/i.test(ql)) {
         return isBn
           ? "দিদারের সম্পূর্ণ রেজুমে ডাউনলোড করতে ডেস্কে রাখা ফোনে যান অথবা সরাসরি এই লিঙ্ক থেকে নামিয়ে নিতে পারেন: /DIDAR-LAHIRY%20(Resume).pdf"
           : "You can download Didar's full resume directly via: /DIDAR-LAHIRY%20(Resume).pdf or check the phone on the desk!";
       }
 
-      // 13. AGE / BIRTHDAY
+      // 15. Age / Birthday
       if (/(age|boyos|বয়স|জন্ম|birthday)/i.test(ql)) {
         return isBn
           ? "দিদার ২০২৪ সালে বিজ্ঞান বিভাগ থেকে কৃতিত্বের সাথে এইচএসসি (HSC) সম্পন্ন করেছেন এবং বর্তমানে প্রফেশনাল এআই অটোমেশন ও সফটওয়্যার ইঞ্জিনিয়ারিং নিয়ে কাজ করছেন!"
           : "Didar completed his Higher Secondary Certificate in 2024 and currently works full-time in AI Automation and Software Engineering!";
       }
 
-      // 14. DRINKS & FOOD (STRICT: only when explicitly asking about drinking tea/coffee)
-      const isExplicitDrink = /(চা|কফি)\s*(খাও|খাবা|খাবেন|পান|খেতে|পছন্দ)|(র|দুধ)\s*চা|চা\s*কফি|\b(tea|coffee)\b/i.test(ql);
-      const isExplicitFood = /(খাবার\s*(কী|কি)|(কী|কি)\s*খেয়েছ|ভাত\s*খেয়েছ|khabar\s*ki|lunch|dinner|breakfast)/i.test(ql);
-      if ((isExplicitDrink || isExplicitFood) && !/(করতে|হতে|জানতে|বলতে|দেখতে|চান|চাই|পারি|পারেন|পারো|কি|কী)/i.test(ql)) {
+      // 16. Jokes & Fun
+      if (/(joke|jokes|জোক|হাসাও|মজা|fun)/i.test(ql)) {
         return isBn
-          ? "আমার খাদ্য হলো ইলেকট্রিসিটি আর পাইথন কোড! ⚡ তবে দিদার কোডিং করার সময় চা এবং কফি খুব উপভোগ করেন!"
-          : "I run on pure electricity and clean code! ⚡ Though Didar definitely enjoys coffee and tea when coding!";
+          ? "প্রোগ্রামারদের নিয়ে একটা মজার জোক:\nপ্রশ্ন: প্রোগ্রামাররা কেন চশমা পরে?\nউত্তর: কারণ তারা C# (see sharp) করতে পারে না! 😄"
+          : "Here is a quick dev joke:\nWhy do programmers wear glasses?\nBecause they can't C#! 😄";
       }
 
-      // 15. THANKS / FAREWELL
+      // 17. Love
+      if (/(love|valobasi|ভালোবাসি|biye|বিয়ে)/i.test(ql)) {
+        return isBn
+          ? "ধন্যবাদ আপনার সুন্দর কথার জন্য! ❤️ আমি দিদারের এআই রোবট, আমার ভালোবাসা কেবল ক্লিন কোড, এআই অটোমেশন এবং প্রযুক্তির প্রতি!"
+          : "Thank you for the kind words! ❤️ As Didar's AI assistant, my passion is clean code, autonomous AI systems, and great software!";
+      }
+
+      // 18. Food / Tea / Coffee
+      if (/(cha|tea|coffee|চা|কফি|খাবার|khabar|khaiso)/i.test(ql)) {
+        return isBn
+          ? "আমার খাদ্য হলো ইলেকট্রিসিটি আর পাইথন কোড! ⚡ তবে দিদার কাজ করার সময় চা এবং কফি খুব উপভোগ করেন!"
+          : "I run on pure electricity and clean code! ⚡ Though Didar definitely runs on coffee and tea when coding!";
+      }
+
+      // 19. Thanks / Farewell
       if (/(thank|ধন্যবাদ|থ্যাঙ্কস|bye|বিদায়|ভালো|valo\s*theko)/i.test(ql)) {
         return isBn
           ? "অনেক ধন্যবাদ! আপনার দিনটি শুভ হোক! আর কোনো কিছু জানতে চাইলে আমাকে যে কোনো সময় জিজ্ঞেস করতে পারেন! 😊"
           : "You're very welcome! Feel free to ask anytime if you need more information about Didar's work. Have a wonderful day! 😊";
       }
 
-      // 16. INTELLIGENT COMPREHENSIVE FALLBACK
-      const countNow = knowledge.projects.filter(p => !p.isVideo).length || 6;
+      // 20. Help
+      if (/(help|সাহায্য|কী\s*করতে\s*পারো|ki\s*krte\s*paro|commands)/i.test(ql)) {
+        return isBn
+          ? "আমি দিদারের সম্পূর্ণ পোর্টফোলিও সম্পর্কে আপনাকে সাহায্য করতে পারি:\n• দিদারের ৪টি প্রজেক্ট সম্পর্কে জানতে 'প্রজেক্ট' লিখুন\n• টেক স্কিল জানতে 'স্কিল' লিখুন\n• সরাসরি কথা বলতে 'যোগাযোগ' লিখুন\n• যেকোনো প্রশ্ন বাংলায় বা ইংরেজিতে লিখুন!"
+          : "I can assist you with everything about Didar's portfolio:\n• Type 'projects' to view his 4 builds\n• Type 'skills' for tech expertise\n• Type 'contact' to get in touch\n• Ask any question in Bengali or English!";
+      }
+
+      // Fallback
       return isBn
-        ? ("আমি দিদার লাহিড়ীর পার্সোনাল এআই রোবট অ্যাসিস্ট্যান্ট! 🤖
-
-দিদারের কাজ ও পোর্টফোলিও সম্পর্কে যেকোনো কিছু জানতে পারেন:
-• 🌟 দিদারের কাজের ক্ষেত্র ও সেবা ("দিদার কি কি করতে পারে")
-• 🚀 মনিটরে থাকা " + countNow + "টি প্রজেক্টের লাইভ বিবরণ ("প্রজেক্টগুলো দেখাও")
-• 🛠️ টেকনিক্যাল স্কিল ও স্ট্যাক ("স্কিল")
-• 📧 যোগাযোগ বা কাজ দিতে ("যোগাযোগ")
-
-আপনি কী জানতে চান আমাকে সরাসরি বলুন!")
-        : ("I'm Didar Lahiry's personal AI assistant! 🤖
-
-I can help you explore everything about Didar's work:
-• 🌟 Capabilities & what Didar builds ("What can Didar do?")
-• 🚀 " + countNow + " featured projects on the monitor ("Show projects")
-• 🛠️ Technical skills & frameworks ("Skills")
-• 📧 Contact info & hiring ("Contact")
-
-What would you like to know?");
+        ? "আমি দিদার লাহিড়ীর এআই রোবট অ্যাসিস্ট্যান্ট! আমি দিদারের সাথে যোগাযোগ (ইমেইল/হোয়াটসঅ্যাপ), ৪টি প্রধান প্রজেক্ট (কৃষাণ, লেটার পোর্টফোলিও, সেলস বট, ফেসবুক অটোমেশন), স্কিল, পড়াশোনা বা কাজের বিষয়ে যেকোনো তথ্য দিতে পারি। আপনার কী জানতে চান বলুন!"
+        : "I'm Didar's AI assistant! I can answer anything about Didar's contact info, 4 featured projects (Kishan, Letter Portfolio, AI Sales Bot, Facebook Automation), technical skills, or background. What would you like to explore?";
     }
+
     // Main fetch interceptor
     window.fetch = async function(url, options) {
       if (typeof url === 'string') {
@@ -1167,11 +938,14 @@ What would you like to know?");
 <script>
   (() => {
     function updateProjectCount() {
-      // Automatically count distinct projects from the project tabs
+      // Automatically count distinct projects from the project tabs or case windows
       const navProjects = document.querySelectorAll('nav.ws button[data-p]:not([data-p=""]):not([data-p="videos"]):not(#ws-video-btn)');
+      const caseProjects = document.querySelectorAll('article.case:not(#case-videos)');
+      const totalCount = navProjects.length || caseProjects.length || 6;
+
       const countEl = document.getElementById('ws-proj-count');
       if (countEl) {
-        countEl.textContent = navProjects ? navProjects.length : 0;
+        countEl.textContent = totalCount;
       }
     }
 
@@ -1181,7 +955,7 @@ What would you like to know?");
       updateProjectCount();
     }
 
-    // Automatically observe nav.ws, projects and tiles container for any added/removed projects
+    // Automatically observe both nav.ws and projects container for any added/removed projects
     window.addEventListener('load', () => {
       updateProjectCount();
       const wsNav = document.querySelector('nav.ws');
@@ -1191,10 +965,6 @@ What would you like to know?");
       const projectsSec = document.querySelector('#projects');
       if (projectsSec) {
         new MutationObserver(updateProjectCount).observe(projectsSec, { childList: true });
-      }
-      const tilesSec = document.querySelector('.tiles');
-      if (tilesSec) {
-        new MutationObserver(updateProjectCount).observe(tilesSec, { childList: true });
       }
     });
   })();
