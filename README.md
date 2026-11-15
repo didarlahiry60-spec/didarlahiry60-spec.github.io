@@ -1,10 +1,10 @@
-# 🌟 Didar Lahiry — Interactive 3D Developer Room Portfolio
+# Didar Lahiry — Interactive 3D Developer Room Portfolio
 
 আপনার রেফারেন্স করা অ্যাওয়ার্ড-মনোনীত ৩ডি পিনবোর্ড ও রুম পোর্টফোলিওকে ভিত্তি করে আপনার সম্পূর্ণ পার্সোনাল ব্র্যান্ডিং ও ইনফরমেশন দিয়ে এটি তৈরি করা হয়েছে।
 
 ---
 
-## 🚀 কিভাবে সাইটটি চালাবেন (How to Run)
+## কিভাবে সাইটটি চালাবেন (How to Run)
 
 পোর্টফোলিও ডিরেক্টরি: `/home/didar-lahiry/Antigravity/Target Portfolio 2`
 
@@ -22,7 +22,7 @@ npx serve -l 3000
 
 ---
 
-## 🎮 পোর্টফোলিও কীভাবে কাজ করে (Architecture & Interactive 3D Features)
+## পোর্টফোলিও কীভাবে কাজ করে (Architecture & Interactive 3D Features)
 
 1. **ইন্টারেক্টিভ এআই মডেল ট্রেনিং লোডার (ML Training Sequence):**
    - সাইট লোড হওয়ার সময় একটি রিয়েল-টাইম টার্মিনাল সিমুলেশন চলে:  
@@ -62,7 +62,7 @@ npx serve -l 3000
 
 ---
 
-## 🛠️ ফাইল ও ফোল্ডার স্ট্রাকচার
+## ফাইল ও ফোল্ডার স্ট্রাকচার
 
 - **`index.html`**: মূল পোর্টফোলিও মার্কআপ ও ইন্টারফেস।
 - **`_astro/`**: Three.js থ্রি-ডি রেন্ডারিং ইঞ্জিন, ক্যামেরা কন্ট্রোল ও জিএসএপি এনিমেশন বান্ডেল।
